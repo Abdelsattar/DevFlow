@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  ExportOptions.plist
+  Used by `xcodebuild -exportArchive` to produce an unsigned .app for local
+  distribution and the GitHub Actions release pipeline.
+
+  When code signing is added (Phase D of the roadmap), change:
+    - method          → "developer-id"
+    - signingStyle    → "manual"  (or "automatic" with a team ID)
+    - Add: <key>signingCertificate</key><string>Developer ID Application</string>
+    - Add: <key>teamID</key><string>YOUR_TEAM_ID</string>
+-->
+<plist version="1.0">
+<dict>
+    <!-- "none" = export without any code signing -->
+    <key>method</key>
+    <string>none</string>
+
+    <!-- Strip Swift standard libraries that are already in macOS -->
+    <key>stripSwiftSymbols</key>
+    <true/>
+
+    <!-- Do not embed a provisioning profile (not needed for unsigned macOS apps) -->
+    <key>compileBitcode</key>
+    <false/>
+</dict>
+</plist>

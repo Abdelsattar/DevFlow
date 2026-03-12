@@ -1,0 +1,115 @@
+name: Release
+
+# Triggers on any tag that matches v1.2.3 (or v1.2.3-beta.1, etc.)
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+*'
+
+# Allow the workflow to create a GitHub Release and upload assets
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    name: Build, package, and publish
+    runs-on: macos-14          # Xcode 15 is the default on macos-14 runners
+
+    steps:
+      # ── 1. Checkout ────────────────────────────────────────────────────────
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ── 2. Select Xcode version ────────────────────────────────────────────
+      - name: Select Xcode 15
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app/Contents/Developer
+
+      # ── 3. Archive ─────────────────────────────────────────────────────────
+      # Produces a .xcarchive with code signing disabled (unsigned build).
+      # When APPLE_CERTIFICATE and related secrets are added (Phase D), replace
+      # CODE_SIGNING_ALLOWED=NO with proper signing identity variables.
+      - name: Archive
+        run: |
+          xcodebuild archive \
+            -scheme DevFlow \
+            -archivePath "$RUNNER_TEMP/DevFlow.xcarchive" \
+            CODE_SIGNING_ALLOWED=NO \
+            SKIP_INSTALL=NO \
+            BUILD_LIBRARY_FOR_DISTRIBUTION=NO
+
+      # ── 4. Export .app ─────────────────────────────────────────────────────
+      - name: Export app
+        run: |
+          xcodebuild -exportArchive \
+            -archivePath "$RUNNER_TEMP/DevFlow.xcarchive" \
+            -exportPath "$RUNNER_TEMP/DevFlowExport" \
+            -exportOptionsPlist ExportOptions.plist
+
+      # ── 5. Package as .dmg ─────────────────────────────────────────────────
+      - name: Create DMG
+        run: |
+          APP_PATH="$RUNNER_TEMP/DevFlowExport/DevFlow.app"
+          DMG_PATH="$RUNNER_TEMP/DevFlow-${{ github.ref_name }}.dmg"
+
+          # Create a writable staging folder with a symlink to /Applications
+          STAGING="$RUNNER_TEMP/dmg-staging"
+          mkdir -p "$STAGING"
+          cp -R "$APP_PATH" "$STAGING/DevFlow.app"
+          ln -s /Applications "$STAGING/Applications"
+
+          hdiutil create \
+            -volname "DevFlow ${{ github.ref_name }}" \
+            -srcfolder "$STAGING" \
+            -ov \
+            -format UDZO \
+            "$DMG_PATH"
+
+          echo "DMG_PATH=$DMG_PATH" >> "$GITHUB_ENV"
+
+      # ── 6. Publish GitHub Release ──────────────────────────────────────────
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: DevFlow ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          body: |
+            ## DevFlow ${{ github.ref_name }}
+
+            ### Install
+
+            1. Download **DevFlow-${{ github.ref_name }}.dmg** below.
+            2. Open the DMG and drag **DevFlow.app** to `/Applications`.
+            3. On first launch, right-click the app and choose **Open** to bypass Gatekeeper
+               (this is required for unsigned builds — see [ROADMAP Phase D](doc/ROADMAP.md)).
+
+            ### What's new
+
+            See [ROADMAP.md](doc/ROADMAP.md) for the full development plan.
+
+            ---
+            > **Note:** This build is unsigned. Code signing and notarization are planned
+            > for Phase D of the roadmap.
+          files: ${{ env.DMG_PATH }}
+
+# ── Future: code signing (Phase D) ─────────────────────────────────────────────
+#
+# When ready to sign and notarize, add the following secrets to the repository:
+#   APPLE_CERTIFICATE          Base64-encoded Developer ID Application .p12
+#   APPLE_CERTIFICATE_PASSWORD Password for the .p12
+#   APPLE_TEAM_ID              Your Apple Developer Team ID
+#   APPLE_APPLE_ID             Apple ID used for notarization
+#   APPLE_APP_PASSWORD         App-specific password for notarization
+#
+# Then replace the archive step's CODE_SIGNING_ALLOWED=NO with:
+#   CODE_SIGN_IDENTITY="Developer ID Application: Your Name (TEAMID)"
+#   DEVELOPMENT_TEAM="TEAMID"
+#
+# And add a notarization step after creating the DMG:
+#   xcrun notarytool submit DevFlow.dmg \
+#     --apple-id "$APPLE_APPLE_ID" \
+#     --password "$APPLE_APP_PASSWORD" \
+#     --team-id "$APPLE_TEAM_ID" \
+#     --wait
+#   xcrun stapler staple DevFlow.dmg

@@ -1,0 +1,611 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		08EE79AE8EDC6438881C9391 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D731F461483C55351BCF822 /* SettingsView.swift */; };
+		1030EFE837A109A753C5651B /* JiraSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82B084C80BEFABB56EEDC8DF /* JiraSettingsView.swift */; };
+		1842FEE2C2D198CFD6DAAA81 /* GitHubService.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6E18060E902E9C02303379 /* GitHubService.swift */; };
+		1C1691BA8B208A0296368982 /* PersistenceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97F0E0A7F58896D60002D42A /* PersistenceTests.swift */; };
+		1E385C94E318B1FC4050684D /* KeychainService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1DA8676E95FCC0A9F6211DB4 /* KeychainService.swift */; };
+		3941AC4C397EE870B781E538 /* SetupWizardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62EC09F7C7CF645A513018CE /* SetupWizardView.swift */; };
+		3A0EA3EAF38C35DDE4181666 /* TicketListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBE0BF31BC4F086900B8E343 /* TicketListView.swift */; };
+		47FA6D146B8D3D30E7A5DEBB /* Phase4Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38264252D75D6ED88F37FC0A /* Phase4Tests.swift */; };
+		5473D79115B268C7BFFB452F /* ChatPersistenceService.swift in Sources */ = {isa = PBXBuildFile; fileRef = E4C09BD68B18691C72993334 /* ChatPersistenceService.swift */; };
+		57C50D1DF957953BF2F3A60A /* WorkflowState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 552D0005CB8AA7AE48258A28 /* WorkflowState.swift */; };
+		617FE7B28FDED15AF438F817 /* TicketRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29F2E44BEA4F8E40A6CE994D /* TicketRowView.swift */; };
+		66ACB1C2F587887E8597DB16 /* DiffPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E79B4E316DFE7D54954684BA /* DiffPreviewView.swift */; };
+		678B49E7C8A47657741EC026 /* GitHubModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87717871434F3054375B50B1 /* GitHubModels.swift */; };
+		6953BCAE28EE9E915AFABFD9 /* DateFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0FE3582BB433AE39626CC664 /* DateFormatting.swift */; };
+		70AEBC4AD6FF0F4FC00D7DF4 /* Phase3Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7735D9C5922DF488907B4EC2 /* Phase3Tests.swift */; };
+		7E8DB972D1A3F9C5C657BBFE /* PersistentChatModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDBAAC88BD1ECDFF0109ED18 /* PersistentChatModels.swift */; };
+		843B7D228D246D128A6706E1 /* JiraModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E13466E3262B7A0633CD23 /* JiraModels.swift */; };
+		85E7259D854BAD5A68CA1079 /* FileChangeModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93457AA86EF1CBEB01FF4D58 /* FileChangeModels.swift */; };
+		8CD1941AE4DD9D5C64E7C890 /* CopilotSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753F5A6ED9889255532BAABC /* CopilotSettingsView.swift */; };
+		EE11223344556677AABBCCDD /* ComponentsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF11223344556677AABBCCDD /* ComponentsSettingsView.swift */; };
+		8E96B02F6655164F0C7F737B /* ADFDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241B21414324C798A5922093 /* ADFDocument.swift */; };
+		906098FB7CF2F0D7D3C5212C /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CA7BB028682EBF749FA560 /* ChatView.swift */; };
+		98B8837F1176DB1BFDB450BE /* PromptBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E3E7896366D84902AD95F9 /* PromptBuilder.swift */; };
+		9C194D22B3F9751B12CEFFC0 /* CopilotService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA2082DD571F4E4E0038EED /* CopilotService.swift */; };
+		9EB4D2EF8348B2371A49817B /* ChatTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FB2CD34D8E0399A788E243A /* ChatTabBar.swift */; };
+		A14ED68F1C20C2AE84DF09CE /* PRCreationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F726BEB2C58E185E6F6E7185 /* PRCreationView.swift */; };
+		ABD406DA9639C85F1A8762AD /* TicketFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A65B46A55856B5C6213DDAA8 /* TicketFilterBar.swift */; };
+		AF4D31CA0B4A11DFD1B3375B /* Phase5Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373554CCEBF9367DE5625664 /* Phase5Tests.swift */; };
+		B1C6C3212738F784183A8F7A /* ChatModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BC8693E728373B100D75E8 /* ChatModelTests.swift */; };
+		B8118CD8BAD26AE199C5EF3E /* GitHubSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BAE8FF5453632438BC66578 /* GitHubSettingsView.swift */; };
+		BF9C570D80ED5FACB5F7A8D1 /* RetryHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C24CA97C1E0035B92F68A80D /* RetryHelper.swift */; };
+		C193D4507B250E0BAC8DB082 /* CodeBlockParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBCCDE259FB64988B805803 /* CodeBlockParser.swift */; };
+		C784765D38F7F613FDDD383E /* TicketDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6958AF1F49AAB90FFD975E /* TicketDetailView.swift */; };
+		C9522070CC55EC0FFA5C1250 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C47BB96DB0561F2AFC5DA66 /* NotificationService.swift */; };
+		D6308C9E1E2AA71AA2697937 /* ChatModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5352C5BF617042199D47AC2 /* ChatModels.swift */; };
+		DF236D6E7183BB69BF7EA26A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A124210044CB8CEEA2E8021 /* ContentView.swift */; };
+		E331915A2DE2E5DA4D4DC3C8 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72706F93B099DB7BAAEBC58E /* AppState.swift */; };
+		EAE64544336608E5D1A15FBB /* DevFlowApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEBF00E5ED3097C5E223BC96 /* DevFlowApp.swift */; };
+		EF9DFC76E8D77C5B3E863E6B /* ChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CFC2176C69A521BA03F18D5 /* ChatManager.swift */; };
+		F069FCFC75AF13AA8B21CD0E /* JiraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D01B82B936E0E5B2D22D47 /* JiraService.swift */; };
+		FB31C90370BCEC6BE2B7FB9B /* JiraServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0555DC0C15EE0DBE956B1973 /* JiraServiceTests.swift */; };
+		FFDBCDD028C4B2516128E6B7 /* GitClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A323E147F72939BF014D9C61 /* GitClient.swift */; };
+		AA11223344556677AABBCCDD /* CopilotAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB11223344556677AABBCCDD /* CopilotAuthService.swift */; };
+		CC11223344556677AABBCCDD /* JiraOAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD11223344556677AABBCCDD /* JiraOAuthService.swift */; };
+		B1C2D3E4F5A6B7C8D9E0F1A2 /* AutonomousFlowModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1F2 /* AutonomousFlowModels.swift */; };
+		B2C3D4E5F6A7B8C9D0E1F2A3 /* ChangeSetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3C4D5E6F7A8B9C0D1E2F3 /* ChangeSetService.swift */; };
+		B3C4D5E6F7A8B9C0D1E2F3A4 /* PRPipelineService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B4C5D6E7F8A9B0C1D2E3F4 /* PRPipelineService.swift */; };
+		B4C5D6E7F8A9B0C1D2E3F4A5 /* AutonomousFlowOrchestrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B5C6D7E8F9A0B1C2D3E4F5 /* AutonomousFlowOrchestrator.swift */; };
+		B5C6D7E8F9A0B1C2D3E4F5A6 /* AutonomousFlowProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B6C7D8E9F0A1B2C3D4E5F6 /* AutonomousFlowProgressView.swift */; };
+		B6C7D8E9F0A1B2C3D4E5F6A7 /* AutonomousFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B7C8D9E0F1A2B3C4D5E6F7 /* AutonomousFlowTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		8DE8F9A1C05125B83EE81E07 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1781F676DEDF5767F3243DB0 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 91BC931A30EA516E61F89FA3;
+			remoteInfo = DevFlow;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		0555DC0C15EE0DBE956B1973 /* JiraServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JiraServiceTests.swift; path = Tests/DevFlowTests/JiraServiceTests.swift; sourceTree = SOURCE_ROOT; };
+		0CFC2176C69A521BA03F18D5 /* ChatManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChatManager.swift; path = Sources/DevFlow/Services/ChatManager.swift; sourceTree = SOURCE_ROOT; };
+		0FE3582BB433AE39626CC664 /* DateFormatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DateFormatting.swift; path = Sources/DevFlow/Utilities/DateFormatting.swift; sourceTree = SOURCE_ROOT; };
+		14E3E7896366D84902AD95F9 /* PromptBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PromptBuilder.swift; path = Sources/DevFlow/Services/PromptBuilder.swift; sourceTree = SOURCE_ROOT; };
+		195F9293022CEE80C9E8D0C0 /* DevFlowTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DevFlowTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		1DA8676E95FCC0A9F6211DB4 /* KeychainService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = KeychainService.swift; path = Sources/DevFlow/Services/KeychainService.swift; sourceTree = SOURCE_ROOT; };
+		1E671A1EF17BCFFF0274619D /* DevFlow.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DevFlow.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		22CA7BB028682EBF749FA560 /* ChatView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChatView.swift; path = Sources/DevFlow/Views/Chat/ChatView.swift; sourceTree = SOURCE_ROOT; };
+		241B21414324C798A5922093 /* ADFDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ADFDocument.swift; path = Sources/DevFlow/Models/ADFDocument.swift; sourceTree = SOURCE_ROOT; };
+		27BC8693E728373B100D75E8 /* ChatModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChatModelTests.swift; path = Tests/DevFlowTests/ChatModelTests.swift; sourceTree = SOURCE_ROOT; };
+		27D01B82B936E0E5B2D22D47 /* JiraService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JiraService.swift; path = Sources/DevFlow/Services/JiraService.swift; sourceTree = SOURCE_ROOT; };
+		2852D450F57CCF224BE7CBE3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Sources/DevFlow/Info.plist; sourceTree = SOURCE_ROOT; };
+		29F2E44BEA4F8E40A6CE994D /* TicketRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TicketRowView.swift; path = Sources/DevFlow/Views/TicketList/TicketRowView.swift; sourceTree = SOURCE_ROOT; };
+		2EA2082DD571F4E4E0038EED /* CopilotService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CopilotService.swift; path = Sources/DevFlow/Services/CopilotService.swift; sourceTree = SOURCE_ROOT; };
+		373554CCEBF9367DE5625664 /* Phase5Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Phase5Tests.swift; path = Tests/DevFlowTests/Phase5Tests.swift; sourceTree = SOURCE_ROOT; };
+		38264252D75D6ED88F37FC0A /* Phase4Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Phase4Tests.swift; path = Tests/DevFlowTests/Phase4Tests.swift; sourceTree = SOURCE_ROOT; };
+		38E13466E3262B7A0633CD23 /* JiraModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JiraModels.swift; path = Sources/DevFlow/Models/JiraModels.swift; sourceTree = SOURCE_ROOT; };
+		3D731F461483C55351BCF822 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SettingsView.swift; path = Sources/DevFlow/Views/Settings/SettingsView.swift; sourceTree = SOURCE_ROOT; };
+		4A124210044CB8CEEA2E8021 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContentView.swift; path = Sources/DevFlow/Views/ContentView.swift; sourceTree = SOURCE_ROOT; };
+		552D0005CB8AA7AE48258A28 /* WorkflowState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = WorkflowState.swift; path = Sources/DevFlow/Models/WorkflowState.swift; sourceTree = SOURCE_ROOT; };
+		5BAE8FF5453632438BC66578 /* GitHubSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GitHubSettingsView.swift; path = Sources/DevFlow/Views/Settings/GitHubSettingsView.swift; sourceTree = SOURCE_ROOT; };
+		5FB2CD34D8E0399A788E243A /* ChatTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChatTabBar.swift; path = Sources/DevFlow/Views/Chat/ChatTabBar.swift; sourceTree = SOURCE_ROOT; };
+		62EC09F7C7CF645A513018CE /* SetupWizardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SetupWizardView.swift; path = Sources/DevFlow/Views/Onboarding/SetupWizardView.swift; sourceTree = SOURCE_ROOT; };
+		659CF396E7686A388D14CF4F /* DevFlow.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = DevFlow.entitlements; path = Sources/DevFlow/DevFlow.entitlements; sourceTree = SOURCE_ROOT; };
+		72706F93B099DB7BAAEBC58E /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppState.swift; path = Sources/DevFlow/App/AppState.swift; sourceTree = SOURCE_ROOT; };
+		753F5A6ED9889255532BAABC /* CopilotSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CopilotSettingsView.swift; path = Sources/DevFlow/Views/Settings/CopilotSettingsView.swift; sourceTree = SOURCE_ROOT; };
+		FF11223344556677AABBCCDD /* ComponentsSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ComponentsSettingsView.swift; path = Sources/DevFlow/Views/Settings/ComponentsSettingsView.swift; sourceTree = SOURCE_ROOT; };
+		7735D9C5922DF488907B4EC2 /* Phase3Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Phase3Tests.swift; path = Tests/DevFlowTests/Phase3Tests.swift; sourceTree = SOURCE_ROOT; };
+		7BBCCDE259FB64988B805803 /* CodeBlockParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CodeBlockParser.swift; path = Sources/DevFlow/Utilities/CodeBlockParser.swift; sourceTree = SOURCE_ROOT; };
+		82B084C80BEFABB56EEDC8DF /* JiraSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JiraSettingsView.swift; path = Sources/DevFlow/Views/Settings/JiraSettingsView.swift; sourceTree = SOURCE_ROOT; };
+		87717871434F3054375B50B1 /* GitHubModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GitHubModels.swift; path = Sources/DevFlow/Models/GitHubModels.swift; sourceTree = SOURCE_ROOT; };
+		93457AA86EF1CBEB01FF4D58 /* FileChangeModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FileChangeModels.swift; path = Sources/DevFlow/Models/FileChangeModels.swift; sourceTree = SOURCE_ROOT; };
+		97F0E0A7F58896D60002D42A /* PersistenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PersistenceTests.swift; path = Tests/DevFlowTests/PersistenceTests.swift; sourceTree = SOURCE_ROOT; };
+		9C47BB96DB0561F2AFC5DA66 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NotificationService.swift; path = Sources/DevFlow/Services/NotificationService.swift; sourceTree = SOURCE_ROOT; };
+		A323E147F72939BF014D9C61 /* GitClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GitClient.swift; path = Sources/DevFlow/Services/GitClient.swift; sourceTree = SOURCE_ROOT; };
+		A65B46A55856B5C6213DDAA8 /* TicketFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TicketFilterBar.swift; path = Sources/DevFlow/Views/TicketList/TicketFilterBar.swift; sourceTree = SOURCE_ROOT; };
+		AF6958AF1F49AAB90FFD975E /* TicketDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TicketDetailView.swift; path = Sources/DevFlow/Views/Workflow/TicketDetailView.swift; sourceTree = SOURCE_ROOT; };
+		B5352C5BF617042199D47AC2 /* ChatModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChatModels.swift; path = Sources/DevFlow/Models/ChatModels.swift; sourceTree = SOURCE_ROOT; };
+		C24CA97C1E0035B92F68A80D /* RetryHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RetryHelper.swift; path = Sources/DevFlow/Utilities/RetryHelper.swift; sourceTree = SOURCE_ROOT; };
+		DEBF00E5ED3097C5E223BC96 /* DevFlowApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DevFlowApp.swift; path = Sources/DevFlow/App/DevFlowApp.swift; sourceTree = SOURCE_ROOT; };
+		E4C09BD68B18691C72993334 /* ChatPersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChatPersistenceService.swift; path = Sources/DevFlow/Services/ChatPersistenceService.swift; sourceTree = SOURCE_ROOT; };
+		E79B4E316DFE7D54954684BA /* DiffPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DiffPreviewView.swift; path = Sources/DevFlow/Views/Workflow/DiffPreviewView.swift; sourceTree = SOURCE_ROOT; };
+		EC6E18060E902E9C02303379 /* GitHubService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GitHubService.swift; path = Sources/DevFlow/Services/GitHubService.swift; sourceTree = SOURCE_ROOT; };
+		F726BEB2C58E185E6F6E7185 /* PRCreationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PRCreationView.swift; path = Sources/DevFlow/Views/Workflow/PRCreationView.swift; sourceTree = SOURCE_ROOT; };
+		FBE0BF31BC4F086900B8E343 /* TicketListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TicketListView.swift; path = Sources/DevFlow/Views/TicketList/TicketListView.swift; sourceTree = SOURCE_ROOT; };
+		FDBAAC88BD1ECDFF0109ED18 /* PersistentChatModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PersistentChatModels.swift; path = Sources/DevFlow/Models/PersistentChatModels.swift; sourceTree = SOURCE_ROOT; };
+		BB11223344556677AABBCCDD /* CopilotAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CopilotAuthService.swift; path = Sources/DevFlow/Services/CopilotAuthService.swift; sourceTree = SOURCE_ROOT; };
+		DD11223344556677AABBCCDD /* JiraOAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JiraOAuthService.swift; path = Sources/DevFlow/Services/JiraOAuthService.swift; sourceTree = SOURCE_ROOT; };
+		A1B2C3D4E5F6A7B8C9D0E1F2 /* AutonomousFlowModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AutonomousFlowModels.swift; path = Sources/DevFlow/Models/AutonomousFlowModels.swift; sourceTree = SOURCE_ROOT; };
+		A2B3C4D5E6F7A8B9C0D1E2F3 /* ChangeSetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChangeSetService.swift; path = Sources/DevFlow/Services/ChangeSetService.swift; sourceTree = SOURCE_ROOT; };
+		A3B4C5D6E7F8A9B0C1D2E3F4 /* PRPipelineService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PRPipelineService.swift; path = Sources/DevFlow/Services/PRPipelineService.swift; sourceTree = SOURCE_ROOT; };
+		A4B5C6D7E8F9A0B1C2D3E4F5 /* AutonomousFlowOrchestrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AutonomousFlowOrchestrator.swift; path = Sources/DevFlow/Services/AutonomousFlowOrchestrator.swift; sourceTree = SOURCE_ROOT; };
+		A5B6C7D8E9F0A1B2C3D4E5F6 /* AutonomousFlowProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AutonomousFlowProgressView.swift; path = Sources/DevFlow/Views/Workflow/AutonomousFlowProgressView.swift; sourceTree = SOURCE_ROOT; };
+		A6B7C8D9E0F1A2B3C4D5E6F7 /* AutonomousFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AutonomousFlowTests.swift; path = Tests/DevFlowTests/AutonomousFlowTests.swift; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		72EAF812E2D653AC0BDA8C73 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EA728391B888329F3C65A6C6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		095FEE2E633C50D24407F2D6 /* App */ = {
+			isa = PBXGroup;
+			children = (
+				DEBF00E5ED3097C5E223BC96 /* DevFlowApp.swift */,
+				72706F93B099DB7BAAEBC58E /* AppState.swift */,
+			);
+			name = App;
+			sourceTree = "<group>";
+		};
+		0A85897F1A32FE9B91C081CD = {
+			isa = PBXGroup;
+			children = (
+				D685C104AFFBCF83C7CB0FB6 /* Sources */,
+				516831D832DDC7318520265A /* Tests */,
+				BF7A2D27A78D590BDEF15AF2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		18949C62934A33E572EEC275 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				62EC09F7C7CF645A513018CE /* SetupWizardView.swift */,
+			);
+			name = Onboarding;
+			sourceTree = "<group>";
+		};
+		236BC2A9E1EA908BF1EA8E20 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				22CA7BB028682EBF749FA560 /* ChatView.swift */,
+				5FB2CD34D8E0399A788E243A /* ChatTabBar.swift */,
+			);
+			name = Chat;
+			sourceTree = "<group>";
+		};
+		42C8C8F52FD4BBFAB782A409 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				7BBCCDE259FB64988B805803 /* CodeBlockParser.swift */,
+				0FE3582BB433AE39626CC664 /* DateFormatting.swift */,
+				C24CA97C1E0035B92F68A80D /* RetryHelper.swift */,
+			);
+			name = Utilities;
+			sourceTree = "<group>";
+		};
+		516831D832DDC7318520265A /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				0555DC0C15EE0DBE956B1973 /* JiraServiceTests.swift */,
+				27BC8693E728373B100D75E8 /* ChatModelTests.swift */,
+				7735D9C5922DF488907B4EC2 /* Phase3Tests.swift */,
+				38264252D75D6ED88F37FC0A /* Phase4Tests.swift */,
+				373554CCEBF9367DE5625664 /* Phase5Tests.swift */,
+				97F0E0A7F58896D60002D42A /* PersistenceTests.swift */,
+				A6B7C8D9E0F1A2B3C4D5E6F7 /* AutonomousFlowTests.swift */,
+			);
+			name = Tests;
+			sourceTree = "<group>";
+		};
+		538CE131D434B80F1CFAACB9 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				3D731F461483C55351BCF822 /* SettingsView.swift */,
+				82B084C80BEFABB56EEDC8DF /* JiraSettingsView.swift */,
+				5BAE8FF5453632438BC66578 /* GitHubSettingsView.swift */,
+				FF11223344556677AABBCCDD /* ComponentsSettingsView.swift */,
+				753F5A6ED9889255532BAABC /* CopilotSettingsView.swift */,
+			);
+			name = Settings;
+			sourceTree = "<group>";
+		};
+		78EF4B0EA3FDA2A792BCF074 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				4A124210044CB8CEEA2E8021 /* ContentView.swift */,
+				236BC2A9E1EA908BF1EA8E20 /* Chat */,
+				538CE131D434B80F1CFAACB9 /* Settings */,
+				DF11528E309A0C27F092F657 /* TicketList */,
+				9706FE9DFAD0C70E4DE1E004 /* Workflow */,
+				18949C62934A33E572EEC275 /* Onboarding */,
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		95DF61116CBC7317336DBE03 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				0CFC2176C69A521BA03F18D5 /* ChatManager.swift */,
+				E4C09BD68B18691C72993334 /* ChatPersistenceService.swift */,
+				BB11223344556677AABBCCDD /* CopilotAuthService.swift */,
+				2EA2082DD571F4E4E0038EED /* CopilotService.swift */,
+				A323E147F72939BF014D9C61 /* GitClient.swift */,
+				EC6E18060E902E9C02303379 /* GitHubService.swift */,
+				DD11223344556677AABBCCDD /* JiraOAuthService.swift */,
+				27D01B82B936E0E5B2D22D47 /* JiraService.swift */,
+				1DA8676E95FCC0A9F6211DB4 /* KeychainService.swift */,
+				9C47BB96DB0561F2AFC5DA66 /* NotificationService.swift */,
+				14E3E7896366D84902AD95F9 /* PromptBuilder.swift */,
+				A2B3C4D5E6F7A8B9C0D1E2F3 /* ChangeSetService.swift */,
+				A3B4C5D6E7F8A9B0C1D2E3F4 /* PRPipelineService.swift */,
+				A4B5C6D7E8F9A0B1C2D3E4F5 /* AutonomousFlowOrchestrator.swift */,
+			);
+			name = Services;
+			sourceTree = "<group>";
+		};
+		9706FE9DFAD0C70E4DE1E004 /* Workflow */ = {
+			isa = PBXGroup;
+			children = (
+				AF6958AF1F49AAB90FFD975E /* TicketDetailView.swift */,
+				E79B4E316DFE7D54954684BA /* DiffPreviewView.swift */,
+				F726BEB2C58E185E6F6E7185 /* PRCreationView.swift */,
+				A5B6C7D8E9F0A1B2C3D4E5F6 /* AutonomousFlowProgressView.swift */,
+			);
+			name = Workflow;
+			sourceTree = "<group>";
+		};
+		BF7A2D27A78D590BDEF15AF2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1E671A1EF17BCFFF0274619D /* DevFlow.app */,
+				195F9293022CEE80C9E8D0C0 /* DevFlowTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		CA608C0B22E7B6F9B389BDDD /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B5352C5BF617042199D47AC2 /* ChatModels.swift */,
+				93457AA86EF1CBEB01FF4D58 /* FileChangeModels.swift */,
+				FDBAAC88BD1ECDFF0109ED18 /* PersistentChatModels.swift */,
+				38E13466E3262B7A0633CD23 /* JiraModels.swift */,
+				87717871434F3054375B50B1 /* GitHubModels.swift */,
+				241B21414324C798A5922093 /* ADFDocument.swift */,
+				552D0005CB8AA7AE48258A28 /* WorkflowState.swift */,
+				A1B2C3D4E5F6A7B8C9D0E1F2 /* AutonomousFlowModels.swift */,
+			);
+			name = Models;
+			sourceTree = "<group>";
+		};
+		D685C104AFFBCF83C7CB0FB6 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				095FEE2E633C50D24407F2D6 /* App */,
+				CA608C0B22E7B6F9B389BDDD /* Models */,
+				95DF61116CBC7317336DBE03 /* Services */,
+				78EF4B0EA3FDA2A792BCF074 /* Views */,
+				42C8C8F52FD4BBFAB782A409 /* Utilities */,
+				2852D450F57CCF224BE7CBE3 /* Info.plist */,
+				659CF396E7686A388D14CF4F /* DevFlow.entitlements */,
+			);
+			name = Sources;
+			sourceTree = "<group>";
+		};
+		DF11528E309A0C27F092F657 /* TicketList */ = {
+			isa = PBXGroup;
+			children = (
+				FBE0BF31BC4F086900B8E343 /* TicketListView.swift */,
+				29F2E44BEA4F8E40A6CE994D /* TicketRowView.swift */,
+				A65B46A55856B5C6213DDAA8 /* TicketFilterBar.swift */,
+			);
+			name = TicketList;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		208C54D1C19CFF7994A925A1 /* DevFlowTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 53D9908EEBB79268F5109C98 /* Build configuration list for PBXNativeTarget "DevFlowTests" */;
+			buildPhases = (
+				6E010B3D85AA514D3FB28B7F /* Sources */,
+				72EAF812E2D653AC0BDA8C73 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F0249B88240D14ADE51D10D7 /* PBXTargetDependency */,
+			);
+			name = DevFlowTests;
+			productName = DevFlowTests;
+			productReference = 195F9293022CEE80C9E8D0C0 /* DevFlowTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		91BC931A30EA516E61F89FA3 /* DevFlow */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3E0B4CFADE440D7DB1D84917 /* Build configuration list for PBXNativeTarget "DevFlow" */;
+			buildPhases = (
+				5F445891BFC9292A97836CED /* Sources */,
+				EA728391B888329F3C65A6C6 /* Frameworks */,
+				CC28E47826555D63EAA3D6AA /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DevFlow;
+			productName = DevFlow;
+			productReference = 1E671A1EF17BCFFF0274619D /* DevFlow.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1781F676DEDF5767F3243DB0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					208C54D1C19CFF7994A925A1 = {
+						CreatedOnToolsVersion = 16.0;
+						TestTargetID = 91BC931A30EA516E61F89FA3;
+					};
+					91BC931A30EA516E61F89FA3 = {
+						CreatedOnToolsVersion = 16.0;
+					};
+				};
+			};
+			buildConfigurationList = C9A1E6028C0C9FEF32EC40B7 /* Build configuration list for PBXProject "DevFlow" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 0A85897F1A32FE9B91C081CD;
+			productRefGroup = BF7A2D27A78D590BDEF15AF2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				91BC931A30EA516E61F89FA3 /* DevFlow */,
+				208C54D1C19CFF7994A925A1 /* DevFlowTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		CC28E47826555D63EAA3D6AA /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		5F445891BFC9292A97836CED /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EAE64544336608E5D1A15FBB /* DevFlowApp.swift in Sources */,
+				E331915A2DE2E5DA4D4DC3C8 /* AppState.swift in Sources */,
+				D6308C9E1E2AA71AA2697937 /* ChatModels.swift in Sources */,
+				85E7259D854BAD5A68CA1079 /* FileChangeModels.swift in Sources */,
+				7E8DB972D1A3F9C5C657BBFE /* PersistentChatModels.swift in Sources */,
+				843B7D228D246D128A6706E1 /* JiraModels.swift in Sources */,
+				678B49E7C8A47657741EC026 /* GitHubModels.swift in Sources */,
+				8E96B02F6655164F0C7F737B /* ADFDocument.swift in Sources */,
+				57C50D1DF957953BF2F3A60A /* WorkflowState.swift in Sources */,
+				EF9DFC76E8D77C5B3E863E6B /* ChatManager.swift in Sources */,
+				5473D79115B268C7BFFB452F /* ChatPersistenceService.swift in Sources */,
+				9C194D22B3F9751B12CEFFC0 /* CopilotService.swift in Sources */,
+				FFDBCDD028C4B2516128E6B7 /* GitClient.swift in Sources */,
+				1842FEE2C2D198CFD6DAAA81 /* GitHubService.swift in Sources */,
+				AA11223344556677AABBCCDD /* CopilotAuthService.swift in Sources */,
+				CC11223344556677AABBCCDD /* JiraOAuthService.swift in Sources */,
+				F069FCFC75AF13AA8B21CD0E /* JiraService.swift in Sources */,
+				1E385C94E318B1FC4050684D /* KeychainService.swift in Sources */,
+				C9522070CC55EC0FFA5C1250 /* NotificationService.swift in Sources */,
+				98B8837F1176DB1BFDB450BE /* PromptBuilder.swift in Sources */,
+				C193D4507B250E0BAC8DB082 /* CodeBlockParser.swift in Sources */,
+				6953BCAE28EE9E915AFABFD9 /* DateFormatting.swift in Sources */,
+				BF9C570D80ED5FACB5F7A8D1 /* RetryHelper.swift in Sources */,
+				DF236D6E7183BB69BF7EA26A /* ContentView.swift in Sources */,
+				906098FB7CF2F0D7D3C5212C /* ChatView.swift in Sources */,
+				9EB4D2EF8348B2371A49817B /* ChatTabBar.swift in Sources */,
+				08EE79AE8EDC6438881C9391 /* SettingsView.swift in Sources */,
+				1030EFE837A109A753C5651B /* JiraSettingsView.swift in Sources */,
+				B8118CD8BAD26AE199C5EF3E /* GitHubSettingsView.swift in Sources */,
+				8CD1941AE4DD9D5C64E7C890 /* CopilotSettingsView.swift in Sources */,
+				EE11223344556677AABBCCDD /* ComponentsSettingsView.swift in Sources */,
+				3A0EA3EAF38C35DDE4181666 /* TicketListView.swift in Sources */,
+				617FE7B28FDED15AF438F817 /* TicketRowView.swift in Sources */,
+				ABD406DA9639C85F1A8762AD /* TicketFilterBar.swift in Sources */,
+				C784765D38F7F613FDDD383E /* TicketDetailView.swift in Sources */,
+				66ACB1C2F587887E8597DB16 /* DiffPreviewView.swift in Sources */,
+				A14ED68F1C20C2AE84DF09CE /* PRCreationView.swift in Sources */,
+				3941AC4C397EE870B781E538 /* SetupWizardView.swift in Sources */,
+				B1C2D3E4F5A6B7C8D9E0F1A2 /* AutonomousFlowModels.swift in Sources */,
+				B2C3D4E5F6A7B8C9D0E1F2A3 /* ChangeSetService.swift in Sources */,
+				B3C4D5E6F7A8B9C0D1E2F3A4 /* PRPipelineService.swift in Sources */,
+				B4C5D6E7F8A9B0C1D2E3F4A5 /* AutonomousFlowOrchestrator.swift in Sources */,
+				B5C6D7E8F9A0B1C2D3E4F5A6 /* AutonomousFlowProgressView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		6E010B3D85AA514D3FB28B7F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FB31C90370BCEC6BE2B7FB9B /* JiraServiceTests.swift in Sources */,
+				B1C6C3212738F784183A8F7A /* ChatModelTests.swift in Sources */,
+				70AEBC4AD6FF0F4FC00D7DF4 /* Phase3Tests.swift in Sources */,
+				47FA6D146B8D3D30E7A5DEBB /* Phase4Tests.swift in Sources */,
+				AF4D31CA0B4A11DFD1B3375B /* Phase5Tests.swift in Sources */,
+				1C1691BA8B208A0296368982 /* PersistenceTests.swift in Sources */,
+				B6C7D8E9F0A1B2C3D4E5F6A7 /* AutonomousFlowTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		F0249B88240D14ADE51D10D7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 91BC931A30EA516E61F89FA3 /* DevFlow */;
+			targetProxy = 8DE8F9A1C05125B83EE81E07 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		0472651C93A265996FEFE4D2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOS_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.devflow.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DevFlow.app/Contents/MacOS/DevFlow";
+			};
+			name = Release;
+		};
+		4F298C0EA378A304ED3DF3C0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Sources/DevFlow/DevFlow.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = Sources/DevFlow/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOS_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.devflow.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		621385DDFDB50DB5DC3C7AFD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOS_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.devflow.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DevFlow.app/Contents/MacOS/DevFlow";
+			};
+			name = Debug;
+		};
+		66FFD7A513855DDEAE880D66 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = Sources/DevFlow/DevFlow.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = Sources/DevFlow/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOS_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = io.devflow.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		9584AF23772D44B73CAE1DEA /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				MACOS_DEPLOYMENT_TARGET = 14.0;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		E95DB3DDB35DB25437EE0C0B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				MACOS_DEPLOYMENT_TARGET = 14.0;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3E0B4CFADE440D7DB1D84917 /* Build configuration list for PBXNativeTarget "DevFlow" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				66FFD7A513855DDEAE880D66 /* Debug */,
+				4F298C0EA378A304ED3DF3C0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		53D9908EEBB79268F5109C98 /* Build configuration list for PBXNativeTarget "DevFlowTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				621385DDFDB50DB5DC3C7AFD /* Debug */,
+				0472651C93A265996FEFE4D2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C9A1E6028C0C9FEF32EC40B7 /* Build configuration list for PBXProject "DevFlow" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				E95DB3DDB35DB25437EE0C0B /* Debug */,
+				9584AF23772D44B73CAE1DEA /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 1781F676DEDF5767F3243DB0 /* Project object */;
+}

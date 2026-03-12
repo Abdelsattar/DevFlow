@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleIdentifier</key>
+    <string>io.devflow.app</string>
+    <key>CFBundleName</key>
+    <string>DevFlow</string>
+    <key>CFBundleDisplayName</key>
+    <string>DevFlow</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0</string>
+    <key>CFBundleExecutable</key>
+    <string>DevFlow</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+
+    <!-- Hide Dock icon — menu bar only -->
+    <!-- Temporarily set to false for debugging; set back to true for production -->
+    <key>LSUIElement</key>
+    <false/>
+
+    <!-- Minimum macOS version -->
+    <key>LSMinimumSystemVersion</key>
+    <string>14.0</string>
+
+    <!-- Required for UNUserNotificationCenter -->
+    <key>NSUserNotificationAlertStyle</key>
+    <string>alert</string>
+
+    <!-- URL scheme for OAuth callbacks -->
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>io.devflow.app.oauth</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>devflow</string>
+            </array>
+        </dict>
+    </array>
+
+    <!-- Human-readable usage descriptions -->
+    <key>NSAppleEventsUsageDescription</key>
+    <string>DevFlow uses AppleEvents to open files.</string>
+</dict>
+</plist>
