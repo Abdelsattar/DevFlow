@@ -248,28 +248,44 @@ final class ChatManager {
         timeout: Duration = .seconds(300)
     ) async throws -> ChatSession {
         let session = createSession(ticket: ticket, purpose: purpose)
+        let sessionId = session.id
 
-        // If there's an additional user message, send it after the initial auto-message
-        // Wait for the initial auto-message to complete first
+        // Watchdog inherits @MainActor isolation from this function. It fires after
+        // `timeout`, marks the session with a known error marker, then cancels the
+        // active AI streaming task so the await below unblocks.
+        let watchdog = Task { [timeout] in
+            try? await Task.sleep(for: timeout)
+            guard !Task.isCancelled else { return }
+            session.setError(ChatManager.timeoutMarker)
+            self.cancelTask(for: sessionId)
+        }
+
+        defer { watchdog.cancel() }
+
+        // Wait for the initial auto-message that createSession kicked off.
         if let task = activeTasks[session.id] {
             await task.value
         }
 
-        // Check for errors from the initial message
         if let error = session.errorMessage {
+            if error == ChatManager.timeoutMarker { throw ChatSessionError.timeout }
             throw ChatSessionError.aiFailed(error)
         }
 
-        // Send additional context if provided
+        // Send additional context if provided, then wait for it to finish.
         if let extra = additionalUserMessage {
             await sendMessage(extra, in: session)
             if let error = session.errorMessage {
+                if error == ChatManager.timeoutMarker { throw ChatSessionError.timeout }
                 throw ChatSessionError.aiFailed(error)
             }
         }
 
         return session
     }
+
+    // Sentinel used by the timeout watchdog in runSessionToCompletion.
+    private static let timeoutMarker = "__jetflow_timeout__"
 
     /// Stream a response from the Copilot API for the given session.
     private func sendToAI(session: ChatSession) async {

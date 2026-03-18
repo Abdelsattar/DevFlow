@@ -202,10 +202,12 @@ struct DiffPreviewView: View {
     }
 
     private func applyChange(_ change: FileChange) {
-        do {
-            try ChangeSetService.applyChange(change, basePath: appState.workspacePath)
-        } catch {
-            change.applyError = error.localizedDescription
+        Task {
+            do {
+                try await ChangeSetService.applyChange(change, basePath: appState.workspacePath)
+            } catch {
+                change.applyError = error.localizedDescription
+            }
         }
     }
 
@@ -216,8 +218,14 @@ struct DiffPreviewView: View {
     }
 
     private func applyAllChanges() {
-        for change in changeSet.changes where change.isPending {
-            applyChange(change)
+        Task {
+            for change in changeSet.changes where change.isPending {
+                do {
+                    try await ChangeSetService.applyChange(change, basePath: appState.workspacePath)
+                } catch {
+                    change.applyError = error.localizedDescription
+                }
+            }
         }
     }
 
