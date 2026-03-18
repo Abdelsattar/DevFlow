@@ -1,0 +1,74 @@
+---
+name: Feature Request
+description: Suggest a new feature or improvement for DevFlow
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting a feature! Check the [Roadmap](https://github.com/Abdelsattar/DevFlow/blob/main/doc/ROADMAP.md) first — your idea may already be planned.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Feature Area
+      description: Which part of DevFlow does this relate to?
+      options:
+        - Jira Integration
+        - GitHub Integration
+        - Copilot / AI Chat
+        - Autonomous Flow
+        - Git Operations
+        - PR Creation
+        - Settings / Onboarding
+        - UI / Navigation
+        - Notifications
+        - New Integration
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: roadmap-phase
+    attributes:
+      label: Roadmap Phase
+      description: Does this align with an existing roadmap phase?
+      options:
+        - "🟢 Current — Core Jira-to-PR flow"
+        - "🟡 Next — PR readiness, test planning, review context"
+        - "🔵 Later — Shared prompts, team dashboards, multi-repo"
+        - "✨ Exploring — GitLab/Azure DevOps, new integrations"
+        - "Not on roadmap yet"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or Motivation
+      description: What problem does this solve? Why is it needed?
+      placeholder: "I'm always frustrated when..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed Solution
+      description: How do you envision this working?
+      placeholder: Describe the ideal behavior...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives Considered
+      description: Have you considered any workarounds or alternative approaches?
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional Context
+      description: Screenshots, mockups, links to similar features in other tools, etc.

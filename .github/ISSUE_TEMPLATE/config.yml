@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Documentation
+    url: https://github.com/Abdelsattar/DevFlow/tree/main/doc
+    about: Check the docs for setup guides, architecture details, and the roadmap.
+  - name: 🗺️ Roadmap
+    url: https://github.com/Abdelsattar/DevFlow/blob/main/doc/ROADMAP.md
+    about: See what's planned before requesting a feature — it might already be on the list.
