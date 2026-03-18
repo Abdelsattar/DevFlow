@@ -126,50 +126,52 @@ final class JiraService {
 
     // MARK: - Fetch Projects
 
-    /// Fetch all JIRA projects accessible to the authenticated user, paginating through all pages.
-    func fetchProjects() async throws -> [JiraProject] {
-        var allProjects: [JiraProject] = []
-        var startAt = 0
-        let maxResults = 50
-        let urlSession = session
-        let jsonDecoder = decoder
+    struct ProjectPageResult: Sendable {
+        let projects: [JiraProject]
+        let isLast: Bool
+    }
 
+    /// Fetch one page of JIRA projects, optionally filtered by a search query.
+    /// - Parameters:
+    ///   - query: Server-side name/key filter (sent to the Jira API).
+    ///   - startAt: Zero-based offset into the result set.
+    ///   - maxResults: Page size (defaults to 15 for snappy incremental loading).
+    func fetchProjectsPage(query: String = "", startAt: Int = 0, maxResults: Int = 15) async throws -> ProjectPageResult {
         struct ProjectPage: Decodable {
             let values: [JiraProject]
             let isLast: Bool
         }
 
-        while true {
-            let request = try await buildRequest(
-                path: "/rest/api/3/project/search?startAt=\(startAt)&maxResults=\(maxResults)&orderBy=name"
-            )
-            let page: ProjectPage = try await RetryHelper.withRetry {
-                let (data, response) = try await urlSession.data(for: request)
-                guard let httpResponse = response as? HTTPURLResponse else {
-                    throw JiraServiceError.httpError(statusCode: 0, message: "No HTTP response")
-                }
-                switch httpResponse.statusCode {
-                case 200:
-                    do {
-                        return try jsonDecoder.decode(ProjectPage.self, from: data)
-                    } catch {
-                        throw JiraServiceError.decodingError(error.localizedDescription)
-                    }
-                case 401, 403:
-                    throw JiraServiceError.authenticationFailed
-                default:
-                    let message = String(data: data, encoding: .utf8) ?? "Unknown error"
-                    throw JiraServiceError.httpError(statusCode: httpResponse.statusCode, message: message)
-                }
-            }
-            allProjects.append(contentsOf: page.values)
-            if page.isLast || page.values.isEmpty {
-                break
-            }
-            startAt += maxResults
+        var path = "/rest/api/3/project/search?startAt=\(startAt)&maxResults=\(maxResults)&orderBy=name"
+        if !query.isEmpty, let encoded = query.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+            path += "&query=\(encoded)"
         }
 
-        return allProjects
+        let request = try await buildRequest(path: path)
+        let urlSession = session
+        let jsonDecoder = decoder
+
+        let page: ProjectPage = try await RetryHelper.withRetry {
+            let (data, response) = try await urlSession.data(for: request)
+            guard let httpResponse = response as? HTTPURLResponse else {
+                throw JiraServiceError.httpError(statusCode: 0, message: "No HTTP response")
+            }
+            switch httpResponse.statusCode {
+            case 200:
+                do {
+                    return try jsonDecoder.decode(ProjectPage.self, from: data)
+                } catch {
+                    throw JiraServiceError.decodingError(error.localizedDescription)
+                }
+            case 401, 403:
+                throw JiraServiceError.authenticationFailed
+            default:
+                let message = String(data: data, encoding: .utf8) ?? "Unknown error"
+                throw JiraServiceError.httpError(statusCode: httpResponse.statusCode, message: message)
+            }
+        }
+
+        return ProjectPageResult(projects: page.values, isLast: page.isLast)
     }
 
     // MARK: - Fetch Tickets

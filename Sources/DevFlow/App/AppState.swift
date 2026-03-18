@@ -242,6 +242,17 @@ final class AppState {
         return result
     }
 
+    var availableStatuses: [String] {
+        let discoveredStatuses = Set(tickets.map { $0.fields.status.name.trimmingCharacters(in: .whitespacesAndNewlines) })
+            .filter { !$0.isEmpty }
+
+        if discoveredStatuses.isEmpty {
+            return ["To Do", "In Progress", "In Review"]
+        }
+
+        return discoveredStatuses.sorted { $0.localizedCaseInsensitiveCompare($1) == .orderedAscending }
+    }
+
     var lastActiveTicketKey: String? {
         UserDefaults.standard.string(forKey: DefaultsKeys.lastActiveTicketKey)
     }

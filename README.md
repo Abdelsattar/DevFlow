@@ -1,153 +1,155 @@
-# DevFlow
+# DevFlow 🚀
 
-DevFlow is a native macOS app that takes you from a Jira ticket to a merged pull request without leaving a single window. It combines ticket discovery, AI-assisted chat (Plan / Implement / Review), local git operations, and GitHub PR creation into one guided workflow.
+DevFlow is a native macOS app built to turn a **Jira ticket into a ready-to-merge pull request** without juggling five different tools. It keeps ticket context, AI assistance, local git work, and GitHub handoff in one place so the flow feels continuous instead of fragmented.
 
-> **Platform:** macOS 14 Sonoma or later
-> **Stack:** Swift 6 · SwiftUI · SwiftData · No external dependencies
-
----
-
-## Features
-
-- **Ticket discovery:** Fetch, filter, and search assigned Jira tickets
-- **AI chat workflows:** Plan, implement, review, and general chat sessions for each ticket
-- **Streaming responses:** AI replies stream in real time via a Copilot-compatible gateway
-- **Change set pipeline:** Inspect, edit, apply, and commit AI-suggested file changes directly
-- **PR creation:** Configure PR details, push, and open PR on GitHub in one step
-- **Jira integration:** Auto-transition ticket status and post PR link after creation
-- **Session persistence:** All chats and changes are saved across restarts
-- **Onboarding wizard:** Guided setup with live integration testing
-- **Secure credentials:** All tokens stored securely in macOS Keychain; never written to disk
-
-For architecture and vision details: [doc/details.md](doc/details.md).
+> **Platform:** macOS 14 Sonoma or later  
+> **Stack:** Swift 6 · SwiftUI · SwiftData · no external runtime dependencies
 
 ---
 
-## For Users — Download and Install
+## Why DevFlow
 
-No developer tools required. DevFlow ships as a pre-built `.dmg` for macOS.
+- **One continuous workspace:** ticket context, AI chat, code changes, commits, and PR creation stay in the same app.
+- **Flexible assistance:** use focused chat modes like `Plan`, `Implement`, `Review`, or a general `Chat` when they help; skip around as needed.
+- **Developer stays in control:** inspect, edit, and approve suggested changes before they become commits.
+- **Built for continuity:** chats and change sets persist across restarts.
+- **Security-first defaults:** credentials live in macOS Keychain, not in plaintext files.
 
-### Requirements
-- macOS 14 Sonoma or later
+## 🎯 The goal
 
-### Steps
-1. Go to the [Releases page](../../releases) and download the latest `DevFlow.dmg`.
-2. Open the `.dmg`, drag **DevFlow.app** to `/Applications`.
-3. Right-click (or Control-click) DevFlow.app and choose **Open** on the first launch if Gatekeeper prompts.
-4. Complete the setup wizard:
-   - Jira: instance URL, email, API token
-   - GitHub: host, org, Personal Access Token
-   - Copilot: sign in or gateway URL
-   - Workspace path: git repositories folder
+DevFlow is not just a chat app and not just a PR helper.
 
-See [doc/getting-started-users.md](doc/getting-started-users.md) for a walkthrough.
+The goal is simple: take a ticket from **Jira → context → code changes → review → ready-to-merge PR** in one clear flow, and keep improving that flow until it feels natural every day.
+
+If you want the deeper product and architecture picture, start with [doc/details.md](doc/details.md).
 
 ---
 
-## For Developers — Run Locally
+## How the flow works
 
-DevFlow uses only Apple frameworks. No external package managers. Xcode only.
+DevFlow is best understood as one flat ticket-to-PR flow:
 
-### Requirements
-- macOS 14 Sonoma+
-- Xcode 15 or later ([Mac App Store](https://apps.apple.com/app/xcode/id497799835))
-- Git (included with Xcode Command Line Tools)
+1. **Connect your tools**  
+   Add Jira, GitHub, Copilot, and a local workspace folder in the setup wizard.
 
-To install Git if missing:
+2. **Pick a ticket**  
+   Browse or search assigned Jira work, then open the ticket you want to handle.
+
+3. **Choose how much help you want**  
+   Start a focused `Plan`, `Implement`, `Review`, or `Chat` session. These are tools, not mandatory steps.
+
+4. **Review and apply code changes**  
+   Inspect suggested file edits, adjust them if needed, then commit locally.
+
+5. **Create the PR**  
+   Push the branch, open a pull request on GitHub, and optionally update the Jira ticket.
+
+### Optional: Autonomous Mode
+
+DevFlow also includes **Autonomous Mode** for a more guided end-to-end run through planning, implementation, review, and PR creation with approval checkpoints.
+
+It is powerful, but the transparent version is this: treat it as an assisted workflow, not magic. Today it is best for one focused ticket at a time.
+
+---
+
+## 🟢 Available today
+
+- ✅ Guided onboarding with live integration checks
+- ✅ Jira ticket discovery, filtering, and search
+- ✅ Persistent AI chat sessions per ticket
+- ✅ Streaming AI responses
+- ✅ Suggested code changes with review/apply/edit flow
+- ✅ Local git commits from inside the app
+- ✅ Pull request creation on GitHub
+- ✅ Optional Jira status updates and PR link posting
+- ✅ Session restoration across restarts
+- ✅ Autonomous Mode with approval checkpoints
+
+## 🟡 Coming next
+
+- PR-readiness signals that make review decisions faster
+- Better AI support around test and implementation planning
+- More polished review context before opening the PR
+- Drafting and handoff improvements around PR creation
+- A stronger end-to-end flow for turning one ticket into one clean delivery path
+
+---
+
+## What to know up front
+
+Good docs should be honest, so here are the main current constraints:
+
+- **Unsigned distribution for now:** first launch may require right-click → **Open** because notarized distribution is still ahead on the roadmap.
+- **Manual updates:** install new versions by replacing the app from the latest `.dmg`.
+- **One workspace path at a time:** DevFlow is currently optimized around a single local workspace root.
+- **PRs are created live:** there is no draft-PR path yet.
+- **Team-scale features are not the focus yet:** today's experience is strongest for individual contributors working locally.
+
+---
+
+## Quick start
+
+### For users
+
+1. Download the latest `.dmg` from the [Releases page](../../releases).
+2. Drag **DevFlow.app** into `/Applications`.
+3. Open the app and complete setup for Jira, GitHub, Copilot, and your local workspace.
+
+Full walkthrough: [doc/getting-started-users.md](doc/getting-started-users.md)
+
+### For developers
+
 ```sh
-xcode-select --install
+git clone <repo-url>
+cd <repo-folder>
+open DevFlow.xcodeproj
 ```
 
-### Clone and run
-```sh
-# 1. Clone the repo
- git clone <repo-url>
- cd DevFlow
+Then run the app with **⌘R** in Xcode.
 
-# 2. Open in Xcode
- open DevFlow.xcodeproj
-
-# 3. Select DevFlow scheme, "My Mac" destination
-# 4. Press ⌘R to build and run
-```
-
-### Run tests
-```sh
-# In Xcode: ⌘U
-# From terminal:
-swift test
-```
-
-### Project layout
-```
-DevFlow/
- ├── Sources/DevFlow/
- │   ├── App/          # AppState, entry point
- │   ├── Models/       # Jira, GitHub, chat, git
- │   ├── Services/     # JiraService, GitHubService, CopilotService, GitClient
- │   ├── Utilities/    # RetryHelper, CodeBlockParser
- │   └── Views/        # SwiftUI presentation layer
- ├── Tests/DevFlowTests/
- ├── doc/              # Architecture, guides, roadmap
- ├── Package.swift
- └── DevFlow.xcodeproj
-```
-
-Further developer setup details: [doc/getting-started-developers.md](doc/getting-started-developers.md).
+Developer setup and validation: [doc/getting-started-developers.md](doc/getting-started-developers.md)
 
 ---
 
-## Roadmap
+## Documentation map
 
-DevFlow's roadmap is organized by feature phases, not tables.
-
-### Stabilize (Phase A)
-- Enhanced integration status visibility
-- Improved onboarding validation
-- Auto branch creation for commit flows
-- Expanded test coverage
-- Retry UX improvements
-
-### Quality Gates (Phase B)
-- AI-powered test generation
-- Commit quality gates and risk scoring
-- Static analysis summary
-- Review hints in diff views
-
-### Team Adoption (Phase C)
-- Shared prompt/playbook library
-- Reviewer automation
-- Workflow analytics
-- Team dashboard
-- Jira/PR state synchronization
-- Admin controls and environment profiles
-- Exportable workflow timelines
-
-### Distribution & Operations (Phase D)
-- GitHub Actions release pipeline
-- Code signing and notarization
-- Auto-update mechanism
-- CI test runner on PRs
-- Compatibility matrix
-- Multi-repository workspace support
-
-More detail: [doc/ROADMAP.md](doc/ROADMAP.md).
+- [doc/details.md](doc/details.md) — product overview, workflow, architecture, and boundaries
+- [doc/getting-started-users.md](doc/getting-started-users.md) — installation, setup, everyday usage
+- [doc/getting-started-developers.md](doc/getting-started-developers.md) — local development and release packaging
+- [doc/ROADMAP.md](doc/ROADMAP.md) — now / next / later direction
 
 ---
 
-## Documentation
+## 🧭 Roadmap at a glance
 
-- [doc/details.md](doc/details.md): Architecture, product vision, feature catalogue
-- [doc/getting-started-users.md](doc/getting-started-users.md): User setup guide
-- [doc/getting-started-developers.md](doc/getting-started-developers.md): Developer guide
-- [doc/ROADMAP.md](doc/ROADMAP.md): Feature roadmap
+The roadmap is organized around product expansion, not maintenance work:
+
+- **Now:** deepen the core Jira-to-PR flow
+- **Next:** sharpen review quality and PR readiness
+- **Later:** expand team workflows and distribution polish
+- **Exploring:** broader integrations and companion experiences
+
+See [doc/ROADMAP.md](doc/ROADMAP.md) for the full breakdown.
+
+---
+
+## GitHub show-off ideas ✨
+
+If you want this repository page to feel more alive, these are the highest-value upgrades:
+
+- Add a short **20-30 second hero GIF** showing ticket → suggested change → PR creation.
+- Add **2 or 3 annotated screenshots** for onboarding, ticket detail, and diff review.
+- Use a small set of **badges or accent colors** only if they support clarity; one calm blue/teal accent will usually look better than a rainbow row.
+- Create a **social preview image** that matches the app style so links look polished when shared.
+
+These additions would make the GitHub page feel more premium without turning the README into marketing noise.
 
 ---
 
 ## Contributing
 
-Pull requests are welcome. Open an issue first for major changes. See [doc/getting-started-developers.md](doc/getting-started-developers.md) for setup.
+Pull requests are welcome. For larger changes, opening an issue first is a good idea. Start with [doc/getting-started-developers.md](doc/getting-started-developers.md).
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) for details.
+MIT License — see [LICENSE](LICENSE).

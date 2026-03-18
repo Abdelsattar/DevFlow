@@ -5,6 +5,7 @@ struct GitHubSettingsView: View {
 
     @State private var host: String = ""
     @State private var organization: String = ""
+    @State private var orgSearch: String = ""
     @State private var pat: String = ""
     @State private var connectionStatus: ConnectionStatus = .untested
     @State private var isValidating: Bool = false
@@ -54,23 +55,63 @@ struct GitHubSettingsView: View {
 
         if !organizations.isEmpty {
             Section("Organization") {
-                if organizations.count == 1 {
-                    HStack(spacing: 6) {
-                        Image(systemName: "building.2")
-                            .foregroundStyle(.secondary)
-                        Text(organizations[0].login)
-                            .fontWeight(.medium)
-                    }
-                } else {
-                    Picker("Organization", selection: $organization) {
-                        Text("Select an organization").tag("")
-                        ForEach(organizations) { org in
-                            Text(org.login).tag(org.login)
+                let filtered = orgSearch.isEmpty
+                    ? organizations
+                    : organizations.filter { $0.login.localizedCaseInsensitiveContains(orgSearch) }
+                let sorted = filtered.sorted { $0.login == organization && $1.login != organization }
+
+                if organizations.count > 1 {
+                    TextField("", text: $orgSearch, prompt: Text("Search organizations..."))
+                        .textFieldStyle(.roundedBorder)
+                }
+
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 0) {
+                        ForEach(sorted) { org in
+                            Button {
+                                organization = org.login
+                                appState.githubOrganization = org.login
+                            } label: {
+                                HStack(spacing: 8) {
+                                    Image(systemName: organization == org.login ? "checkmark.circle.fill" : "circle")
+                                        .foregroundStyle(organization == org.login ? Color.accentColor : .secondary)
+                                        .frame(width: 16)
+                                    Image(systemName: "building.2")
+                                        .foregroundStyle(.secondary)
+                                        .frame(width: 20)
+                                    VStack(alignment: .leading, spacing: 1) {
+                                        Text(org.login)
+                                            .font(.body)
+                                            .foregroundStyle(.primary)
+                                        if let desc = org.description, !desc.isEmpty {
+                                            Text(desc)
+                                                .font(.caption)
+                                                .foregroundStyle(.secondary)
+                                                .lineLimit(1)
+                                        }
+                                    }
+                                    Spacer()
+                                }
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 6)
+                                .background(organization == org.login ? Color.accentColor.opacity(0.08) : Color.clear)
+                                .cornerRadius(4)
+                            }
+                            .buttonStyle(.plain)
                         }
                     }
-                    .onChange(of: organization) { _, newValue in
-                        appState.githubOrganization = newValue
-                    }
+                    .padding(.vertical, 4)
+                }
+                .frame(maxWidth: .infinity, maxHeight: min(CGFloat(organizations.count) * 44, 200))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 6)
+                        .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
+                )
+
+                if !organization.isEmpty {
+                    Label("\(organization) selected", systemImage: "checkmark.circle.fill")
+                        .font(.caption)
+                        .foregroundStyle(.green)
                 }
             }
         }
@@ -96,10 +137,33 @@ struct GitHubSettingsView: View {
 
     @ViewBuilder
     private var setupSection: some View {
-        Section("Connect to GitHub Enterprise") {
+        Section("GitHub Host") {
+            VStack(alignment: .leading, spacing: 4) {
+                TextField("Host", text: $host, prompt: Text("github.com or github.your-company.com"))
+                    .textFieldStyle(.roundedBorder)
+                    .onChange(of: host, initial: false) { _, newValue in
+                        let trimmed = newValue.trimmingCharacters(in: CharacterSet(charactersIn: "/ "))
+                        let stripped: String
+                        if trimmed.lowercased().hasPrefix("https://") {
+                            stripped = String(trimmed.dropFirst(8))
+                        } else if trimmed.lowercased().hasPrefix("http://") {
+                            stripped = String(trimmed.dropFirst(7))
+                        } else {
+                            stripped = trimmed
+                        }
+                        if stripped != newValue { host = stripped }
+                    }
+                Text("Leave blank for github.com. Change this only if you use a GitHub Enterprise instance.")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+
+        Section("Generate Token") {
             Button {
                 let trimmedHost = host.trimmingCharacters(in: CharacterSet(charactersIn: "/ "))
-                if let url = URL(string: "https://\(trimmedHost)/settings/tokens/new?scopes=repo&description=DevFlow") {
+                let effectiveHost = trimmedHost.isEmpty ? "github.com" : trimmedHost
+                if let url = URL(string: "https://\(effectiveHost)/settings/tokens/new?scopes=repo&description=DevFlow") {
                     NSWorkspace.shared.open(url)
                 }
             } label: {
@@ -110,7 +174,8 @@ struct GitHubSettingsView: View {
             }
             .buttonStyle(.borderedProminent)
 
-            Text("Opens \(host) where you can generate a token with 'repo' scope.")
+            let displayHost = host.trimmingCharacters(in: CharacterSet(charactersIn: "/ ")).isEmpty ? "github.com" : host
+            Text("Opens \(displayHost) in your browser where you can create a token with the 'repo' scope.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -127,20 +192,6 @@ struct GitHubSettingsView: View {
                 }
                 .disabled(pat.isEmpty || isValidating)
             }
-        }
-
-        Section("Advanced") {
-            VStack(alignment: .leading, spacing: 4) {
-                Text("GitHub Enterprise Host")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                TextField("Host", text: $host, prompt: Text("github.your-company.com"))
-                    .textFieldStyle(.roundedBorder)
-            }
-
-            Text("Only change this if your GitHub Enterprise is on a different host.")
-                .font(.caption)
-                .foregroundStyle(.secondary)
         }
     }
 

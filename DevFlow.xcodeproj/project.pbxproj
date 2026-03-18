@@ -26,37 +26,37 @@
 		843B7D228D246D128A6706E1 /* JiraModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38E13466E3262B7A0633CD23 /* JiraModels.swift */; };
 		85E7259D854BAD5A68CA1079 /* FileChangeModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93457AA86EF1CBEB01FF4D58 /* FileChangeModels.swift */; };
 		8CD1941AE4DD9D5C64E7C890 /* CopilotSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753F5A6ED9889255532BAABC /* CopilotSettingsView.swift */; };
-		EE11223344556677AABBCCDD /* ComponentsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF11223344556677AABBCCDD /* ComponentsSettingsView.swift */; };
 		8E96B02F6655164F0C7F737B /* ADFDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 241B21414324C798A5922093 /* ADFDocument.swift */; };
 		906098FB7CF2F0D7D3C5212C /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22CA7BB028682EBF749FA560 /* ChatView.swift */; };
 		98B8837F1176DB1BFDB450BE /* PromptBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14E3E7896366D84902AD95F9 /* PromptBuilder.swift */; };
 		9C194D22B3F9751B12CEFFC0 /* CopilotService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2EA2082DD571F4E4E0038EED /* CopilotService.swift */; };
 		9EB4D2EF8348B2371A49817B /* ChatTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FB2CD34D8E0399A788E243A /* ChatTabBar.swift */; };
 		A14ED68F1C20C2AE84DF09CE /* PRCreationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F726BEB2C58E185E6F6E7185 /* PRCreationView.swift */; };
+		AA11223344556677AABBCCDD /* CopilotAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB11223344556677AABBCCDD /* CopilotAuthService.swift */; };
 		ABD406DA9639C85F1A8762AD /* TicketFilterBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = A65B46A55856B5C6213DDAA8 /* TicketFilterBar.swift */; };
 		AF4D31CA0B4A11DFD1B3375B /* Phase5Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 373554CCEBF9367DE5625664 /* Phase5Tests.swift */; };
-		B1C6C3212738F784183A8F7A /* ChatModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BC8693E728373B100D75E8 /* ChatModelTests.swift */; };
-		B8118CD8BAD26AE199C5EF3E /* GitHubSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BAE8FF5453632438BC66578 /* GitHubSettingsView.swift */; };
-		BF9C570D80ED5FACB5F7A8D1 /* RetryHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C24CA97C1E0035B92F68A80D /* RetryHelper.swift */; };
-		C193D4507B250E0BAC8DB082 /* CodeBlockParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBCCDE259FB64988B805803 /* CodeBlockParser.swift */; };
-		C784765D38F7F613FDDD383E /* TicketDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6958AF1F49AAB90FFD975E /* TicketDetailView.swift */; };
-		C9522070CC55EC0FFA5C1250 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C47BB96DB0561F2AFC5DA66 /* NotificationService.swift */; };
-		D6308C9E1E2AA71AA2697937 /* ChatModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5352C5BF617042199D47AC2 /* ChatModels.swift */; };
-		DF236D6E7183BB69BF7EA26A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A124210044CB8CEEA2E8021 /* ContentView.swift */; };
-		E331915A2DE2E5DA4D4DC3C8 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72706F93B099DB7BAAEBC58E /* AppState.swift */; };
-		EAE64544336608E5D1A15FBB /* DevFlowApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEBF00E5ED3097C5E223BC96 /* DevFlowApp.swift */; };
-		EF9DFC76E8D77C5B3E863E6B /* ChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CFC2176C69A521BA03F18D5 /* ChatManager.swift */; };
-		F069FCFC75AF13AA8B21CD0E /* JiraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D01B82B936E0E5B2D22D47 /* JiraService.swift */; };
-		FB31C90370BCEC6BE2B7FB9B /* JiraServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0555DC0C15EE0DBE956B1973 /* JiraServiceTests.swift */; };
-		FFDBCDD028C4B2516128E6B7 /* GitClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A323E147F72939BF014D9C61 /* GitClient.swift */; };
-		AA11223344556677AABBCCDD /* CopilotAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB11223344556677AABBCCDD /* CopilotAuthService.swift */; };
-		CC11223344556677AABBCCDD /* JiraOAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD11223344556677AABBCCDD /* JiraOAuthService.swift */; };
 		B1C2D3E4F5A6B7C8D9E0F1A2 /* AutonomousFlowModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6A7B8C9D0E1F2 /* AutonomousFlowModels.swift */; };
+		B1C6C3212738F784183A8F7A /* ChatModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27BC8693E728373B100D75E8 /* ChatModelTests.swift */; };
 		B2C3D4E5F6A7B8C9D0E1F2A3 /* ChangeSetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2B3C4D5E6F7A8B9C0D1E2F3 /* ChangeSetService.swift */; };
 		B3C4D5E6F7A8B9C0D1E2F3A4 /* PRPipelineService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B4C5D6E7F8A9B0C1D2E3F4 /* PRPipelineService.swift */; };
 		B4C5D6E7F8A9B0C1D2E3F4A5 /* AutonomousFlowOrchestrator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4B5C6D7E8F9A0B1C2D3E4F5 /* AutonomousFlowOrchestrator.swift */; };
 		B5C6D7E8F9A0B1C2D3E4F5A6 /* AutonomousFlowProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5B6C7D8E9F0A1B2C3D4E5F6 /* AutonomousFlowProgressView.swift */; };
 		B6C7D8E9F0A1B2C3D4E5F6A7 /* AutonomousFlowTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6B7C8D9E0F1A2B3C4D5E6F7 /* AutonomousFlowTests.swift */; };
+		B8118CD8BAD26AE199C5EF3E /* GitHubSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BAE8FF5453632438BC66578 /* GitHubSettingsView.swift */; };
+		BF9C570D80ED5FACB5F7A8D1 /* RetryHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = C24CA97C1E0035B92F68A80D /* RetryHelper.swift */; };
+		C193D4507B250E0BAC8DB082 /* CodeBlockParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BBCCDE259FB64988B805803 /* CodeBlockParser.swift */; };
+		C784765D38F7F613FDDD383E /* TicketDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF6958AF1F49AAB90FFD975E /* TicketDetailView.swift */; };
+		C9522070CC55EC0FFA5C1250 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9C47BB96DB0561F2AFC5DA66 /* NotificationService.swift */; };
+		CC11223344556677AABBCCDD /* JiraOAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD11223344556677AABBCCDD /* JiraOAuthService.swift */; };
+		D6308C9E1E2AA71AA2697937 /* ChatModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5352C5BF617042199D47AC2 /* ChatModels.swift */; };
+		DF236D6E7183BB69BF7EA26A /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A124210044CB8CEEA2E8021 /* ContentView.swift */; };
+		E331915A2DE2E5DA4D4DC3C8 /* AppState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72706F93B099DB7BAAEBC58E /* AppState.swift */; };
+		EAE64544336608E5D1A15FBB /* DevFlowApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEBF00E5ED3097C5E223BC96 /* DevFlowApp.swift */; };
+		EE11223344556677AABBCCDD /* ComponentsSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF11223344556677AABBCCDD /* ComponentsSettingsView.swift */; };
+		EF9DFC76E8D77C5B3E863E6B /* ChatManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CFC2176C69A521BA03F18D5 /* ChatManager.swift */; };
+		F069FCFC75AF13AA8B21CD0E /* JiraService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27D01B82B936E0E5B2D22D47 /* JiraService.swift */; };
+		FB31C90370BCEC6BE2B7FB9B /* JiraServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0555DC0C15EE0DBE956B1973 /* JiraServiceTests.swift */; };
+		FFDBCDD028C4B2516128E6B7 /* GitClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = A323E147F72939BF014D9C61 /* GitClient.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,7 +96,6 @@
 		659CF396E7686A388D14CF4F /* DevFlow.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = DevFlow.entitlements; path = Sources/DevFlow/DevFlow.entitlements; sourceTree = SOURCE_ROOT; };
 		72706F93B099DB7BAAEBC58E /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppState.swift; path = Sources/DevFlow/App/AppState.swift; sourceTree = SOURCE_ROOT; };
 		753F5A6ED9889255532BAABC /* CopilotSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CopilotSettingsView.swift; path = Sources/DevFlow/Views/Settings/CopilotSettingsView.swift; sourceTree = SOURCE_ROOT; };
-		FF11223344556677AABBCCDD /* ComponentsSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ComponentsSettingsView.swift; path = Sources/DevFlow/Views/Settings/ComponentsSettingsView.swift; sourceTree = SOURCE_ROOT; };
 		7735D9C5922DF488907B4EC2 /* Phase3Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Phase3Tests.swift; path = Tests/DevFlowTests/Phase3Tests.swift; sourceTree = SOURCE_ROOT; };
 		7BBCCDE259FB64988B805803 /* CodeBlockParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CodeBlockParser.swift; path = Sources/DevFlow/Utilities/CodeBlockParser.swift; sourceTree = SOURCE_ROOT; };
 		82B084C80BEFABB56EEDC8DF /* JiraSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JiraSettingsView.swift; path = Sources/DevFlow/Views/Settings/JiraSettingsView.swift; sourceTree = SOURCE_ROOT; };
@@ -104,11 +103,19 @@
 		93457AA86EF1CBEB01FF4D58 /* FileChangeModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FileChangeModels.swift; path = Sources/DevFlow/Models/FileChangeModels.swift; sourceTree = SOURCE_ROOT; };
 		97F0E0A7F58896D60002D42A /* PersistenceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PersistenceTests.swift; path = Tests/DevFlowTests/PersistenceTests.swift; sourceTree = SOURCE_ROOT; };
 		9C47BB96DB0561F2AFC5DA66 /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = NotificationService.swift; path = Sources/DevFlow/Services/NotificationService.swift; sourceTree = SOURCE_ROOT; };
+		A1B2C3D4E5F6A7B8C9D0E1F2 /* AutonomousFlowModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AutonomousFlowModels.swift; path = Sources/DevFlow/Models/AutonomousFlowModels.swift; sourceTree = SOURCE_ROOT; };
+		A2B3C4D5E6F7A8B9C0D1E2F3 /* ChangeSetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChangeSetService.swift; path = Sources/DevFlow/Services/ChangeSetService.swift; sourceTree = SOURCE_ROOT; };
 		A323E147F72939BF014D9C61 /* GitClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = GitClient.swift; path = Sources/DevFlow/Services/GitClient.swift; sourceTree = SOURCE_ROOT; };
+		A3B4C5D6E7F8A9B0C1D2E3F4 /* PRPipelineService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PRPipelineService.swift; path = Sources/DevFlow/Services/PRPipelineService.swift; sourceTree = SOURCE_ROOT; };
+		A4B5C6D7E8F9A0B1C2D3E4F5 /* AutonomousFlowOrchestrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AutonomousFlowOrchestrator.swift; path = Sources/DevFlow/Services/AutonomousFlowOrchestrator.swift; sourceTree = SOURCE_ROOT; };
+		A5B6C7D8E9F0A1B2C3D4E5F6 /* AutonomousFlowProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AutonomousFlowProgressView.swift; path = Sources/DevFlow/Views/Workflow/AutonomousFlowProgressView.swift; sourceTree = SOURCE_ROOT; };
 		A65B46A55856B5C6213DDAA8 /* TicketFilterBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TicketFilterBar.swift; path = Sources/DevFlow/Views/TicketList/TicketFilterBar.swift; sourceTree = SOURCE_ROOT; };
+		A6B7C8D9E0F1A2B3C4D5E6F7 /* AutonomousFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AutonomousFlowTests.swift; path = Tests/DevFlowTests/AutonomousFlowTests.swift; sourceTree = SOURCE_ROOT; };
 		AF6958AF1F49AAB90FFD975E /* TicketDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TicketDetailView.swift; path = Sources/DevFlow/Views/Workflow/TicketDetailView.swift; sourceTree = SOURCE_ROOT; };
 		B5352C5BF617042199D47AC2 /* ChatModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChatModels.swift; path = Sources/DevFlow/Models/ChatModels.swift; sourceTree = SOURCE_ROOT; };
+		BB11223344556677AABBCCDD /* CopilotAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CopilotAuthService.swift; path = Sources/DevFlow/Services/CopilotAuthService.swift; sourceTree = SOURCE_ROOT; };
 		C24CA97C1E0035B92F68A80D /* RetryHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = RetryHelper.swift; path = Sources/DevFlow/Utilities/RetryHelper.swift; sourceTree = SOURCE_ROOT; };
+		DD11223344556677AABBCCDD /* JiraOAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JiraOAuthService.swift; path = Sources/DevFlow/Services/JiraOAuthService.swift; sourceTree = SOURCE_ROOT; };
 		DEBF00E5ED3097C5E223BC96 /* DevFlowApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DevFlowApp.swift; path = Sources/DevFlow/App/DevFlowApp.swift; sourceTree = SOURCE_ROOT; };
 		E4C09BD68B18691C72993334 /* ChatPersistenceService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChatPersistenceService.swift; path = Sources/DevFlow/Services/ChatPersistenceService.swift; sourceTree = SOURCE_ROOT; };
 		E79B4E316DFE7D54954684BA /* DiffPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = DiffPreviewView.swift; path = Sources/DevFlow/Views/Workflow/DiffPreviewView.swift; sourceTree = SOURCE_ROOT; };
@@ -116,14 +123,7 @@
 		F726BEB2C58E185E6F6E7185 /* PRCreationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PRCreationView.swift; path = Sources/DevFlow/Views/Workflow/PRCreationView.swift; sourceTree = SOURCE_ROOT; };
 		FBE0BF31BC4F086900B8E343 /* TicketListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = TicketListView.swift; path = Sources/DevFlow/Views/TicketList/TicketListView.swift; sourceTree = SOURCE_ROOT; };
 		FDBAAC88BD1ECDFF0109ED18 /* PersistentChatModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PersistentChatModels.swift; path = Sources/DevFlow/Models/PersistentChatModels.swift; sourceTree = SOURCE_ROOT; };
-		BB11223344556677AABBCCDD /* CopilotAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CopilotAuthService.swift; path = Sources/DevFlow/Services/CopilotAuthService.swift; sourceTree = SOURCE_ROOT; };
-		DD11223344556677AABBCCDD /* JiraOAuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = JiraOAuthService.swift; path = Sources/DevFlow/Services/JiraOAuthService.swift; sourceTree = SOURCE_ROOT; };
-		A1B2C3D4E5F6A7B8C9D0E1F2 /* AutonomousFlowModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AutonomousFlowModels.swift; path = Sources/DevFlow/Models/AutonomousFlowModels.swift; sourceTree = SOURCE_ROOT; };
-		A2B3C4D5E6F7A8B9C0D1E2F3 /* ChangeSetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ChangeSetService.swift; path = Sources/DevFlow/Services/ChangeSetService.swift; sourceTree = SOURCE_ROOT; };
-		A3B4C5D6E7F8A9B0C1D2E3F4 /* PRPipelineService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = PRPipelineService.swift; path = Sources/DevFlow/Services/PRPipelineService.swift; sourceTree = SOURCE_ROOT; };
-		A4B5C6D7E8F9A0B1C2D3E4F5 /* AutonomousFlowOrchestrator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AutonomousFlowOrchestrator.swift; path = Sources/DevFlow/Services/AutonomousFlowOrchestrator.swift; sourceTree = SOURCE_ROOT; };
-		A5B6C7D8E9F0A1B2C3D4E5F6 /* AutonomousFlowProgressView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AutonomousFlowProgressView.swift; path = Sources/DevFlow/Views/Workflow/AutonomousFlowProgressView.swift; sourceTree = SOURCE_ROOT; };
-		A6B7C8D9E0F1A2B3C4D5E6F7 /* AutonomousFlowTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AutonomousFlowTests.swift; path = Tests/DevFlowTests/AutonomousFlowTests.swift; sourceTree = SOURCE_ROOT; };
+		FF11223344556677AABBCCDD /* ComponentsSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ComponentsSettingsView.swift; path = Sources/DevFlow/Views/Settings/ComponentsSettingsView.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -489,9 +489,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Sources/DevFlow/DevFlow.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = ;
 				INFOPLIST_FILE = Sources/DevFlow/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -526,9 +527,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Sources/DevFlow/DevFlow.entitlements;
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = ;
 				INFOPLIST_FILE = Sources/DevFlow/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

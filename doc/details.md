@@ -1,139 +1,159 @@
-# DevFlow App Details
+# DevFlow Details
 
-> Quick links:
-> [README](../README.md) · [User guide](getting-started-users.md) · [Developer guide](getting-started-developers.md) · [Roadmap](ROADMAP.md)
+> Quick links: [README](../README.md) · [User guide](getting-started-users.md) · [Developer guide](getting-started-developers.md) · [Roadmap](ROADMAP.md)
 
-## 1. What DevFlow Is
+## What DevFlow is
 
-DevFlow is a macOS SwiftUI app that helps engineers move from Jira tickets to code changes and pull requests, supported by AI-assisted workflows.
+DevFlow is a macOS app for handling the everyday engineering path from **Jira ticket → local code work → ready-to-merge pull request** in one place.
 
-It combines:
-- Ticket discovery from Jira
-- Multi-session AI chat for planning, implementation, and review
+It brings together:
+
+- Jira ticket discovery and context
+- AI-assisted conversations for planning, coding, review, or general help
 - Local git operations
 - Pull request creation on GitHub
-- Optional Jira updates after PR creation
+- Optional Jira updates after the PR is opened
 
-The app is built to enable a full "ticket → plan → implement → review → PR" flow inside a single interface.
-
----
-
-## 2. Product Vision
-
-DevFlow centralizes Jira, editor, terminal, and GitHub steps in a single desktop tool. Its aim is:
-- Fast ticket triage
-- Structured AI-powered workflows by session type
-- Controlled code change and commit flow
-- Guided PR creation linkage
-- Persisted session and change history for continuity
+The key idea is **less tool-hopping** and a more connected delivery flow.
 
 ---
 
-## 3. User Flow
+## The product promise
 
-1. Complete onboarding (Jira details, project keys, GitHub PAT, Copilot gateway, workspace path).
-2. Ticket list loads with filter/search for assigned work.
-3. Start a workflow session (plan, implement, review, general chat).
-4. AI guidance and code change suggestions available; user inspects, applies, and commits changes.
-5. PR creation: configure, push, create PR, auto-update Jira.
+DevFlow tries to make software delivery feel flatter and more transparent:
 
----
+- Open one ticket and keep the full thread of work around it.
+- Use AI when useful, not as a hard requirement.
+- Keep the developer in charge of what gets applied and committed.
+- Preserve context so work survives restarts.
+- Reduce the friction between "I understand the task" and "the PR is ready."
 
-## 4. Architecture
+### North star ✨
 
-- **App Layer:** SwiftUI application with AppState as observable state
-- **State & Persistence:**
-  - AppState: persistent settings, runtime state, service singletons
-  - SwiftData: chat and change set persistence, session restoration
-- **Service Layer:** JiraService, GitHubService, CopilotService, ChatManager, GitClient, NotificationService
-- **UI Layer:** Onboarding, ticket list, workflow sessions, diff review, PR creation, settings
+The product goal is to make one thing feel beautifully simple:
+
+**take a Jira ticket and move it all the way to a ready-to-merge PR in one connected flow.**
 
 ---
 
-## 5. Current Capabilities
+## How the flow works today
 
-- Guided onboarding and live connection testing
-- Jira ticket ingestion, ticket search, and filtering
-- Ticket detail rendering
-- Multiple chat sessions per ticket
-- Streaming AI responses through Copilot
-- Persistent chat and change sets across restarts
-- Commit-readiness and guided PR creation
-- Jira status transition and comment after PR creation
+1. **Onboarding**
+   - Connect Jira
+   - Select project scope
+   - Connect GitHub
+   - Connect Copilot
+   - Pick a local workspace path
 
----
+2. **Ticket selection**
+   - Load assigned Jira tickets
+   - Search and filter the list
+   - Open the ticket you want to work on
 
-## 6. Target Direction
+3. **Working the ticket**
+   - Start a focused `Plan`, `Implement`, `Review`, or `Chat` session
+   - Use one mode or several; they are optional work surfaces, not mandatory steps
+   - Keep multiple sessions per ticket if that helps your process
 
-DevFlow’s goal is to become a reliable ticket delivery assistant with strong control, traceability, and consistency for individuals and teams:
-- Shorten cycle from ticket to reviewed PR
-- Improve code quality with structured AI workflows
-- Developer remains in control of applied/committed changes
-- Clear automation/logging/status/error reporting
-- Support self-hosted, secure authentication
-- Scale up for teams with customizable workflows
+4. **Handling changes**
+   - Review suggested edits
+   - Apply or refine them
+   - Commit locally from inside DevFlow
 
----
+5. **Shipping**
+   - Configure the PR
+   - Push the branch
+   - Open the PR on GitHub
+   - Optionally transition the Jira ticket and post the PR link back
 
-## 7. Feature Roadmap (Phased)
-
-### Phase A — Stabilize
-- Enhanced ticket list and integration status visibility
-- Improved onboarding validation
-- Auto branch creation before commit
-- Expanded test coverage for session, chat, and PR flows
-- Retry UX improvements
-
-### Phase B — Quality Gates
-- AI-powered test generation suggestions
-- Quality gates for commit flows
-- Change-set risk scoring
-- Static analysis summary surfaced in diff review
-- Automated review hints
-
-### Phase C — Team Adoption
-- Shared prompt/playbook library for teams
-- Reviewer automation
-- Workflow analytics (delivery time, bottlenecks)
-- Team dashboard for workflow progress
-- Two-way Jira/PR state sync
-- Admin controls and environment profiles
-- Exportable audit timeline per ticket
-
-### Phase D — Distribution & Operations
-- GitHub Actions release pipeline
-- Code signing and notarization
-- Auto-update mechanism
-- CI test runner integration
-- Multi-repository workspace support
-- Compatibility matrix for macOS versions
-
-### Ideas Backlog
-- Acceptance criteria extraction from tickets
-- Implementation checklist generation
-- "Definition of done" validator
-- Smart workflow next-step recommendations
-- Commit message linting, PR template injection
-- Duplicate PR detection, branch conflict warnings
-- Configurable workflow transitions, SLA indicators
-- Bulk ticket operations
-- Session handoff notes, offline mode support
-- Secret rotation reminders, credential redaction
-- Policy guardrails/compliance profiles
-- Plug-in integrations (GitLab, Azure DevOps, Linear)
-- CLI companion, universal interface
+6. **Optional autonomy**
+   - Autonomous Mode can run a guided end-to-end flow with approval checkpoints
 
 ---
 
-## 8. Metrics (Candidate)
-- Median time from ticket selection to PR
-- PR rework rate
-- Workflow completion rate
-- Pipeline failures per workflow batch
-- User retention and onboarding success
+## Modes inside one flow
+
+DevFlow does expose visible chat purposes in the UI:
+
+- `Plan`
+- `Implement`
+- `Review`
+- `Chat`
+
+That matters because users really do see those labels in the product. Still, the docs should present them honestly: they are **helpful modes inside one continuous workflow**, not a rigid methodology you must follow every time.
 
 ---
 
-## 9. Summary
+## 🟢 Available today
 
-DevFlow delivers an AI-assisted engineering workflow on macOS. The roadmap aims to further reliability, quality, and team-scale capability for daily delivery.
+- Guided setup with live connection checks
+- Jira ticket loading, filtering, and search
+- Ticket detail views
+- Persistent AI conversations per ticket
+- Streaming responses
+- Suggested change extraction and review
+- Local commits inside the app
+- GitHub pull request creation
+- Optional Jira status transition and PR comment
+- Session and change-set persistence across restarts
+- Autonomous Mode with different approval levels
+
+---
+
+## 🟡 Coming next
+
+- Stronger PR-readiness signals before shipping
+- Better AI assistance for implementation and test planning
+- Richer review context around code changes
+- Smoother PR drafting and handoff
+- A tighter end-to-end path from selected ticket to finished PR
+
+---
+
+## Boundaries and transparency
+
+These are worth stating clearly in public docs:
+
+- **Local-first workflow:** DevFlow is strongest when one person is working from a local macOS machine.
+- **Single workspace root:** the app currently centers around one configured workspace path.
+- **Unsigned distribution today:** first launch may require the usual Gatekeeper override flow.
+- **Manual app updates:** there is no built-in auto-update path yet.
+- **Live PR creation:** there is no draft-PR flow yet.
+- **Autonomous Mode is still best treated as supervised automation:** useful, but not a "hands-off team robot."
+
+---
+
+## Architecture snapshot
+
+- **App layer:** SwiftUI app with shared app state
+- **Persistence:** SwiftData for sessions and change history
+- **Services:** Jira, GitHub, Copilot, git, notifications, and orchestration logic
+- **Views:** onboarding, ticket list, ticket detail, chat sessions, change review, PR creation, and settings
+
+The codebase keeps a clear split between UI, models, services, and utilities. For contributor setup, see [getting-started-developers.md](getting-started-developers.md).
+
+---
+
+## Direction
+
+The roadmap is described as **current / next / later / exploring**.
+
+That is intentional. DevFlow is better communicated through visible product growth: first perfect the core Jira-to-PR flow, then widen what that flow can do.
+
+Read the full roadmap here: [ROADMAP.md](ROADMAP.md)
+
+---
+
+## Useful terms
+
+- **Workflow:** the overall ticket-to-PR journey inside the app
+- **Mode:** one of the focused chat purposes such as `Plan`, `Implement`, `Review`, or `Chat`
+- **Change set:** a group of code edits suggested during a session and reviewed by the user
+- **Autonomous Mode:** an orchestrated run across multiple modes with approval checkpoints
+- **Copilot connection:** the AI backend connection, which may be sign-in based or a compatible gateway depending on setup
+
+---
+
+## Summary
+
+DevFlow is not trying to replace engineering judgment. It is trying to make the path from ticket to PR calmer, more connected, and easier to repeat.

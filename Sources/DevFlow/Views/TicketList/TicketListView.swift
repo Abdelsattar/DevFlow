@@ -30,7 +30,7 @@ struct TicketListView: View {
                     .listStyle(.sidebar)
                 }
             }
-            .frame(minWidth: 280)
+            .frame(minWidth: 360, idealWidth: 420)
             .toolbar {
                 ToolbarItem(placement: .automatic) {
                     Button {

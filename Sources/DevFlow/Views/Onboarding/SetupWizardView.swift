@@ -28,6 +28,10 @@ struct SetupWizardView: View {
     @State private var isLoadingProjects: Bool = false
     @State private var projectLoadError: String?
     @State private var projectSearch: String = ""
+    @State private var projectStartAt: Int = 0
+    @State private var hasMoreProjects: Bool = false
+    @State private var isFetchingMoreProjects: Bool = false
+    @State private var projectSearchTask: Task<Void, Never>?
 
     // Step 3: GitHub
     @State private var githubHost: String = ""
@@ -368,44 +372,42 @@ struct SetupWizardView: View {
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
-            if availableProjects.isEmpty && !isLoadingProjects {
-                HStack {
-                    if let error = projectLoadError {
-                        Label(error, systemImage: "xmark.circle.fill")
-                            .font(.caption)
-                            .foregroundStyle(.red)
-                        Spacer()
-                    } else {
-                        Spacer()
-                    }
-                    Button("Fetch Projects") {
-                        Task { await fetchProjects() }
-                    }
-                    .buttonStyle(.borderedProminent)
-                }
-            } else if isLoadingProjects {
+            if availableProjects.isEmpty && isLoadingProjects {
                 HStack(spacing: 8) {
                     ProgressView().controlSize(.small)
                     Text("Loading projects...")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }
+            } else if availableProjects.isEmpty {
+                VStack(alignment: .leading, spacing: 8) {
+                    if let error = projectLoadError {
+                        Label(error, systemImage: "xmark.circle.fill")
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                    }
+                    Button("Fetch Projects") {
+                        Task { await fetchProjects() }
+                    }
+                    .buttonStyle(.borderedProminent)
+                }
             } else {
-                // Search bar
+                // Search bar — triggers a fresh server-side fetch after 300 ms
                 TextField("", text: $projectSearch, prompt: Text("Search projects..."))
                     .textFieldStyle(.roundedBorder)
-
-                let filtered = projectSearch.isEmpty
-                    ? availableProjects
-                    : availableProjects.filter {
-                        $0.key.localizedCaseInsensitiveContains(projectSearch) ||
-                        $0.name.localizedCaseInsensitiveContains(projectSearch)
+                    .onChange(of: projectSearch) { _, _ in
+                        projectSearchTask?.cancel()
+                        projectSearchTask = Task {
+                            try? await Task.sleep(for: .milliseconds(300))
+                            guard !Task.isCancelled else { return }
+                            await fetchProjects()
+                        }
                     }
 
-                // Project list with checkboxes
+                // Project list with infinite scroll (15 per page)
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 4) {
-                        ForEach(filtered) { project in
+                    LazyVStack(alignment: .leading, spacing: 0) {
+                        ForEach(availableProjects.sorted { selectedProjectKeys.contains($0.key) && !selectedProjectKeys.contains($1.key) }) { project in
                             Toggle(isOn: Binding(
                                 get: { selectedProjectKeys.contains(project.key) },
                                 set: { isOn in
@@ -413,20 +415,44 @@ struct SetupWizardView: View {
                                     else { selectedProjectKeys.remove(project.key) }
                                 }
                             )) {
-                                VStack(alignment: .leading, spacing: 1) {
-                                    Text(project.name)
-                                        .font(.body)
-                                    Text(project.key)
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
+                                HStack(spacing: 8) {
+                                    projectAvatar(project)
+                                    VStack(alignment: .leading, spacing: 1) {
+                                        Text(project.name)
+                                            .font(.body)
+                                        Text(project.key)
+                                            .font(.caption)
+                                            .foregroundStyle(.secondary)
+                                    }
                                 }
                             }
                             .toggleStyle(.checkbox)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 6)
+                        }
+
+                        // Sentinel that triggers the next page when it scrolls into view
+                        if hasMoreProjects {
+                            Color.clear.frame(height: 1)
+                                .onAppear {
+                                    Task { await loadMoreProjects() }
+                                }
+                            if isFetchingMoreProjects {
+                                HStack(spacing: 6) {
+                                    ProgressView().controlSize(.small)
+                                    Text("Loading more…")
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 8)
+                            }
                         }
                     }
                     .padding(.vertical, 4)
                 }
-                .frame(maxHeight: 260)
+                .frame(maxWidth: .infinity, maxHeight: 260)
                 .overlay(
                     RoundedRectangle(cornerRadius: 6)
                         .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
@@ -444,6 +470,36 @@ struct SetupWizardView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
             }
+        }
+        .task {
+            if availableProjects.isEmpty && !isLoadingProjects {
+                await fetchProjects()
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func projectAvatar(_ project: JiraProject) -> some View {
+        if let urlString = project.avatarUrls?.the48x48, let url = URL(string: urlString) {
+            AsyncImage(url: url) { phase in
+                switch phase {
+                case .success(let image):
+                    image
+                        .resizable()
+                        .scaledToFill()
+                        .frame(width: 24, height: 24)
+                        .clipShape(RoundedRectangle(cornerRadius: 4))
+                default:
+                    Image(systemName: "folder.fill")
+                        .foregroundStyle(.secondary)
+                        .frame(width: 24, height: 24)
+                }
+            }
+            .frame(width: 24, height: 24)
+        } else {
+            Image(systemName: "folder.fill")
+                .foregroundStyle(.secondary)
+                .frame(width: 24, height: 24)
         }
     }
 
@@ -497,30 +553,62 @@ struct SetupWizardView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
-                if githubOrganizations.count == 1 {
-                    // Auto-selected
-                    HStack(spacing: 6) {
-                        Image(systemName: "building.2")
-                            .foregroundStyle(.secondary)
-                        Text(githubOrganizations[0].login)
-                            .fontWeight(.medium)
-                    }
-                } else {
-                    // Search + picker
-                    let filtered = githubOrgSearch.isEmpty
-                        ? githubOrganizations
-                        : githubOrganizations.filter { $0.login.localizedCaseInsensitiveContains(githubOrgSearch) }
+                let filtered = githubOrgSearch.isEmpty
+                    ? githubOrganizations
+                    : githubOrganizations.filter { $0.login.localizedCaseInsensitiveContains(githubOrgSearch) }
+                let sorted = filtered.sorted { $0.login == githubOrg && $1.login != githubOrg }
 
+                if githubOrganizations.count > 1 {
                     TextField("", text: $githubOrgSearch, prompt: Text("Search organizations..."))
                         .textFieldStyle(.roundedBorder)
+                }
 
-                    Picker("Organization", selection: $githubOrg) {
-                        Text("Select an organization").tag("")
-                        ForEach(filtered) { org in
-                            Text(org.login).tag(org.login)
+                ScrollView {
+                    LazyVStack(alignment: .leading, spacing: 0) {
+                        ForEach(sorted) { org in
+                            Button {
+                                githubOrg = org.login
+                            } label: {
+                                HStack(spacing: 8) {
+                                    Image(systemName: githubOrg == org.login ? "checkmark.circle.fill" : "circle")
+                                        .foregroundStyle(githubOrg == org.login ? Color.accentColor : .secondary)
+                                        .frame(width: 16)
+                                    Image(systemName: "building.2")
+                                        .foregroundStyle(.secondary)
+                                        .frame(width: 20)
+                                    VStack(alignment: .leading, spacing: 1) {
+                                        Text(org.login)
+                                            .font(.body)
+                                            .foregroundStyle(.primary)
+                                        if let desc = org.description, !desc.isEmpty {
+                                            Text(desc)
+                                                .font(.caption)
+                                                .foregroundStyle(.secondary)
+                                                .lineLimit(1)
+                                        }
+                                    }
+                                    Spacer()
+                                }
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 6)
+                                .background(githubOrg == org.login ? Color.accentColor.opacity(0.08) : Color.clear)
+                                .cornerRadius(4)
+                            }
+                            .buttonStyle(.plain)
                         }
                     }
-                    .labelsHidden()
+                    .padding(.vertical, 4)
+                }
+                .frame(maxWidth: .infinity, maxHeight: min(CGFloat(githubOrganizations.count) * 44, 200))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 6)
+                        .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
+                )
+
+                if !githubOrg.isEmpty {
+                    Label("\(githubOrg) selected", systemImage: "checkmark.circle.fill")
+                        .font(.caption)
+                        .foregroundStyle(.green)
                 }
             }
         }
@@ -528,9 +616,25 @@ struct SetupWizardView: View {
 
     @ViewBuilder
     private var githubSetupView: some View {
-        Text("Connect to GitHub Enterprise to create pull requests and manage repositories.")
+        Text("Connect to GitHub to create pull requests and manage repositories.")
             .font(.subheadline)
             .foregroundStyle(.secondary)
+
+        // Host selection
+        VStack(alignment: .leading, spacing: 8) {
+            Text("GitHub Host")
+                .font(.subheadline)
+                .fontWeight(.medium)
+
+            TextField("", text: $githubHost, prompt: Text("github.com or github.your-company.com"))
+                .textFieldStyle(.roundedBorder)
+
+            Text("Leave blank for github.com. Change this only if you use a GitHub Enterprise instance.")
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+
+        Divider()
 
         // Step 1: Open GitHub to generate token
         VStack(alignment: .leading, spacing: 12) {
@@ -543,18 +647,20 @@ struct SetupWizardView: View {
             }
 
             Button {
-                if let url = URL(string: "https://\(githubHost)/settings/tokens/new?scopes=repo&description=DevFlow") {
+                let effectiveHost = githubHost.trimmingCharacters(in: CharacterSet(charactersIn: "/ ")).isEmpty ? "github.com" : githubHost.trimmingCharacters(in: CharacterSet(charactersIn: "/ "))
+                if let url = URL(string: "https://\(effectiveHost)/settings/tokens/new?scopes=repo&description=DevFlow") {
                     NSWorkspace.shared.open(url)
                 }
             } label: {
                 HStack {
                     Image(systemName: "arrow.up.right.square")
-                    Text("Open GitHub Enterprise")
+                    Text("Generate Token on GitHub")
                 }
             }
             .buttonStyle(.borderedProminent)
 
-            Text("This opens \(githubHost) where you can generate a token. Select the 'repo' scope, then copy the generated token.")
+            let displayHost = githubHost.trimmingCharacters(in: CharacterSet(charactersIn: "/ ")).isEmpty ? "github.com" : githubHost
+            Text("Opens \(displayHost) in your browser. Select the 'repo' scope, then copy the generated token.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }
@@ -1137,15 +1243,42 @@ struct SetupWizardView: View {
 
     // MARK: - Project Fetching
 
+    /// Resets the list and loads the first page using the current search query.
     private func fetchProjects() async {
         isLoadingProjects = true
         projectLoadError = nil
+        projectStartAt = 0
         defer { isLoadingProjects = false }
 
         do {
-            availableProjects = try await appState.jiraService.fetchProjects()
+            let result = try await appState.jiraService.fetchProjectsPage(
+                query: projectSearch,
+                startAt: 0
+            )
+            availableProjects = result.projects
+            hasMoreProjects = !result.isLast
+            projectStartAt = result.projects.count
         } catch {
             projectLoadError = error.localizedDescription
+        }
+    }
+
+    /// Appends the next page to the existing list (triggered by scroll sentinel).
+    private func loadMoreProjects() async {
+        guard hasMoreProjects && !isFetchingMoreProjects && !isLoadingProjects else { return }
+        isFetchingMoreProjects = true
+        defer { isFetchingMoreProjects = false }
+
+        do {
+            let result = try await appState.jiraService.fetchProjectsPage(
+                query: projectSearch,
+                startAt: projectStartAt
+            )
+            availableProjects.append(contentsOf: result.projects)
+            hasMoreProjects = !result.isLast
+            projectStartAt += result.projects.count
+        } catch {
+            // Silently fail on pagination errors; user can use Refresh to retry.
         }
     }
 

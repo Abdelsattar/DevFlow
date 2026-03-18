@@ -1,83 +1,138 @@
-# Getting Started — Users
+# Getting Started — Users ✨
 
-This guide helps you download, install, and start using DevFlow. For a technical overview, see [details.md](details.md).
+This guide helps you install DevFlow, connect your tools, and get through your first ticket smoothly.
 
----
-
-## Requirements
-- Mac running **macOS 14 Sonoma or later**
-- Jira instance (Cloud or Server) and API token
-- GitHub host and Personal Access Token (PAT)
-- Copilot gateway URL (OpenAI-compatible chat endpoint)
-- Local folder containing your git repositories
+For the broader product picture, see [details.md](details.md).
 
 ---
 
-## Installation Steps
+## Before you install
 
-### 1. Download DevFlow
-- Visit the [Releases page](../../releases) and download the latest `.dmg`.
+You will need:
 
-### 2. Install
-- Open the downloaded `.dmg`.
-- Drag **DevFlow.app** to your **Applications** folder.
+- A Mac running **macOS 14 Sonoma or later**
+- Access to **Jira**
+- Access to **GitHub**
+- A **Copilot** connection
+- A local folder containing the git repositories you work in
 
-### 3. First Launch (Gatekeeper)
-- Right-click (or Control-click) **DevFlow.app** in Applications.
-- Choose **Open** and confirm.
-
-> This only needs to be done once; future versions will remove this need when code signing/notarization is added (see [ROADMAP.md](ROADMAP.md) — Phase D).
+Depending on your setup, Copilot may be configured through sign-in or through a compatible gateway URL.
 
 ---
 
-## Setup Wizard
-On first launch, DevFlow guides you to connect your integrations:
-- **Jira:** instance URL, email, API token, project keys
-- **GitHub:** host, organization, PAT
-- **Copilot:** gateway URL
-- **Workspace path:** local directory for git repositories
+## Install DevFlow
 
-Use **Test Connection** at each step to verify credentials.
+1. Open the [Releases page](../../releases).
+2. Download the latest `.dmg`.
+3. Open the disk image.
+4. Drag **DevFlow.app** into **Applications**.
+
+### First launch note
+
+Current builds may require a one-time **right-click → Open** flow because notarized distribution is still ahead on the roadmap.
 
 ---
 
-## Daily Workflow
+## Connect your tools
 
-1. Open DevFlow: assigned Jira tickets auto-load.
-2. Pick a ticket: search/filter by component/status.
-3. Start a workflow session:
-   - Plan: AI-assisted discussion
-   - Implement: get code suggestions, review/apply changes
-   - Review: review changes before PR
-   - General: free-form chat
-4. Apply changes, commit directly in DevFlow.
-5. Create PR: configure details, push branch, open PR on GitHub.
-6. DevFlow can auto-transition Jira ticket status and post PR link.
+When DevFlow launches for the first time, it walks you through setup:
+
+- **Jira** — instance URL, account details, token or auth flow, and project scope
+- **GitHub** — host, organization, and personal access token
+- **Copilot** — sign-in or compatible gateway configuration
+- **Workspace** — the local root folder where your git repositories live
+
+Use the built-in connection tests while setting things up. It is much easier to fix configuration here than after you open a ticket.
+
+---
+
+## Your everyday flow
+
+DevFlow works best when you think of it as one flat workflow:
+
+1. Open DevFlow and load your assigned Jira tickets.
+2. Pick a ticket.
+3. Start the kind of conversation you need.
+4. Review and apply code changes.
+5. Commit locally.
+6. Create the PR and optionally update Jira.
+
+---
+
+## Pick the mode that helps
+
+The app shows four focused modes:
+
+- **Plan** — discuss approach, scope, edge cases, or acceptance criteria
+- **Implement** — generate and refine code changes
+- **Review** — sanity-check the result before shipping
+- **Chat** — ask anything without a specific lane
+
+You do **not** need to use all four every time. They are there to support your workflow, not to force one.
+
+---
+
+## Autonomous Mode
+
+DevFlow also includes **Autonomous Mode**, which can guide a ticket through a broader end-to-end run with approval checkpoints.
+
+That is the exciting version. The practical version is:
+
+- use it for focused work,
+- expect to review important decisions,
+- and treat it as supervised automation rather than a fire-and-forget system.
+
+Today, it is best suited to one ticket at a time in one workspace.
 
 ---
 
 ## Updating DevFlow
 
-- Download the new `.dmg` from the [Releases page](../../releases).
-- Quit DevFlow.
-- Replace old version in **Applications**.
+Updates are currently manual:
 
-> Auto-update is planned in the roadmap (see [ROADMAP.md](ROADMAP.md) — Phase D).
+1. Download the latest `.dmg` from the [Releases page](../../releases).
+2. Quit DevFlow.
+3. Replace the old app in **Applications**.
 
 ---
 
-## Credentials & Security
+## Security and storage
 
-- Tokens (Jira, GitHub) are stored in **macOS Keychain**. Never written to disk in plain text.
-- Credentials transmitted only to configured endpoints.
+- Secrets are stored in **macOS Keychain**
+- App settings are stored locally on your Mac
+- DevFlow does **not** write tokens to plaintext project files
+
+---
+
+## Current limitations
+
+It is better to know these up front:
+
+- DevFlow centers on **one configured workspace root**
+- PR creation is **live**, not draft-based
+- Signed/notarized distribution is **not** in place yet
+- Built-in auto-update is **not** available yet
 
 ---
 
 ## Troubleshooting
 
-- **Tickets not loading:** Verify Jira URL/email/token/project keys in Settings → Jira.
-- **AI chat not responding:** Check Copilot gateway URL and network access.
-- **PR creation fails:** Confirm PAT, organization/host in Settings → GitHub.
-- **"Cannot open" app:** Follow right-click → Open instructions above.
+- **Tickets are not loading**  
+  Re-check your Jira URL, authentication details, and project scope in Settings.
+
+- **AI chat is not responding**  
+  Verify the Copilot connection and confirm your Mac has network access to that endpoint.
+
+- **PR creation fails**  
+  Re-check GitHub host, organization, and PAT settings.
+
+- **The app will not open**  
+  Use the one-time right-click → **Open** flow from Finder.
 
 ---
+
+## Need more context?
+
+- Product overview: [details.md](details.md)
+- Developer setup: [getting-started-developers.md](getting-started-developers.md)
+- Direction and upcoming improvements: [ROADMAP.md](ROADMAP.md)

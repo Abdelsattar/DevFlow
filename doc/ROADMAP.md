@@ -1,80 +1,86 @@
 # DevFlow Roadmap
 
-This roadmap presents phased feature development for DevFlow. For product vision and architecture, see [details.md](details.md).
+This roadmap is intentionally written as direction, not as a fixed rollout ladder.
+
+The goal is to show where DevFlow is heading without making the product feel tied to a rigid sequence. Priorities can move as the real workflow becomes clearer.
+
+At the center of all of it is one product goal:
+
+**turn a Jira ticket into a ready-to-merge pull request in one connected flow.**
+
+For product context, see [details.md](details.md).
 
 ---
 
-## Phase A — Stabilize
+## 🟢 Current product
 
-**Goal:** Make the workflow reliable and predictable for daily use.
+These are the user-visible capabilities DevFlow already delivers today:
 
-**Key Features:**
-- Enhanced visibility for ticket list and integration status
-- Improved onboarding validation and connection workflows
-- Automated branch creation before commit
-- Expanded test coverage: chat session persistence and PR flow
-- Retry UX improvements: clear feedback and user guidance
-
----
-
-## Phase B — Quality Gates
-
-**Goal:** Raise the quality bar on code changes before they leave the developer's machine.
-
-**Key Features:**
-- AI-powered test generation suggestions
-- Quality gates before commit: test presence requirements
-- Change-set risk scoring: risk labels based on change metadata
-- Static analysis summary: lint results surfaced before commit
-- Automated review hints integrated into diff review flows
+- Jira ticket discovery, filtering, and context
+- Focused chat modes for planning, implementation, review, and free-form help
+- Suggested code changes with review and apply flow
+- Local commit flow inside the app
+- GitHub pull request creation
+- Optional Jira status updates and PR link posting
+- Persistent sessions and change sets
+- Autonomous Mode with approval checkpoints
 
 ---
 
-## Phase C — Team Adoption
+## 🟡 Coming next
 
-**Goal:** Evolve DevFlow into a platform for team-wide delivery.
+The next wave of product work is about making the main flow feel more complete and more confident:
 
-**Key Features:**
-- Shared prompt and playbook library for reusable team templates
-- Reviewer automation based on ownership rules
-- Workflow analytics: time tracking and bottleneck insights
-- Team dashboard: visibility into workflow progress across members
-- Two-way Jira/PR state synchronization
-- Admin-level controls: enforce organization settings
-- Environment profiles: staged and production config switching
-- Exportable workflow timeline: audit trails per ticket
+- Better PR-readiness signals before opening the PR
+- AI support for test planning and implementation shaping
+- Richer review context around the generated change set
+- Smoother PR drafting and handoff flows
+- A more polished autonomous path from ticket to PR
 
 ---
 
-## Phase D — Distribution and Operations
+## 🔵 Later
 
-**Goal:** Support distribution without Xcode and reliable operation at scale.
+After the core delivery path is stronger, DevFlow can expand into broader team and platform capabilities:
 
-**Key Features:**
-- GitHub Actions release pipeline: automated builds and releases
-- Code signing and notarization for secure deployment
-- Auto-update mechanism for seamless upgrades
-- CI test runner integrated with PRs
-- Compatibility matrix: clear documentation of supported macOS versions
+- Shared prompt and playbook libraries
+- Reviewer automation
+- Workflow analytics and bottleneck visibility
+- Team dashboards
+- Deeper Jira and PR synchronization
+- Environment profiles and admin controls
+- Exportable workflow timelines
+- Code signing, notarization, and smoother distribution
+- Auto-update support
+- CI and release pipeline improvements
 - Multi-repository workspace support
 
 ---
 
-## Ideas Backlog
+## ✨ Exploring
 
-**Potential Future Features:**
-- Acceptance criteria extraction from tickets
-- Automatic implementation checklist generation
-- "Definition of done" validator before PR creation
-- Smart workflow recommendations
-- Commit message linting and conventional commit support
-- Draft PR and template injection
+These ideas are exciting, but they are still exploratory rather than committed:
+
+- Acceptance-criteria extraction from tickets
+- Implementation checklist generation
+- "Definition of done" validation
+- Draft PR and template support
+- Commit message linting
 - Duplicate PR detection and conflict warnings
-- Configurable workflow transitions and SLA indicators
-- Bulk ticket operations
-- Session handoff notes for collaboration
-- Offline-friendly cached ticket mode
-- Secret rotation reminders and fine-grained redaction
-- Policy guardrails and compliance profiles
-- Plug-in integrations (GitLab, Azure DevOps, Linear)
-- Optional CLI companion and universal macOS/iPadOS interface
+- Offline-friendly ticket caching
+- Session handoff notes
+- Secret rotation reminders and stronger redaction flows
+- Policy and compliance profiles
+- Additional integrations such as GitLab, Azure DevOps, and Linear
+- Optional companion interfaces or automation surfaces
+
+---
+
+## How to read this roadmap
+
+- **🟢 Current product** means visible capabilities available today
+- **🟡 Coming next** means the nearest user-facing improvements
+- **🔵 Later** means meaningful expansion after the core flow gets stronger
+- **✨ Exploring** means interesting enough to track, not promised
+
+That framing keeps the roadmap useful without overcommitting to a story that is more rigid than the product itself.

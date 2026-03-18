@@ -6,6 +6,7 @@ struct JiraProject: Codable, Identifiable, Hashable, Sendable {
     let id: String
     let key: String
     let name: String
+    let avatarUrls: JiraAvatarUrls?
 
     static func == (lhs: JiraProject, rhs: JiraProject) -> Bool { lhs.key == rhs.key }
     func hash(into hasher: inout Hasher) { hasher.combine(key) }

@@ -11,14 +11,14 @@ struct DevFlowApp: App {
         WindowGroup("DevFlow") {
             ContentView()
                 .environment(appState)
-                .frame(minWidth: 700, minHeight: 500)
+                .frame(minWidth: 980, minHeight: 640)
                 .onAppear {
                     delegate.appState = appState
                     appState.configurePersistence()
                     NotificationService.shared.requestPermission()
                 }
         }
-        .defaultSize(width: 700, height: 500)
+        .defaultSize(width: 1200, height: 760)
 
         Settings {
             SettingsView()
