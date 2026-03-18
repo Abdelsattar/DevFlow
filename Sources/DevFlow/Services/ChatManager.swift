@@ -1,4 +1,5 @@
 import Foundation
+import os
 import SwiftData
 
 /// Errors from headless chat session execution.
@@ -20,6 +21,8 @@ enum ChatSessionError: Error, LocalizedError {
 @MainActor
 @Observable
 final class ChatManager {
+    private static let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "io.devflow", category: "ChatManager")
+
     // MARK: - State
 
     /// All active chat sessions, ordered by most recently created.
@@ -77,7 +80,7 @@ final class ChatManager {
         }
 
         hasLoadedPersistedSessions = true
-        print("[ChatManager] Restored \(restored.count) session(s) from persistence")
+        Self.logger.info("Restored \(restored.count) session(s) from persistence")
     }
 
     // MARK: - Computed

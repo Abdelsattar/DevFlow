@@ -1,10 +1,12 @@
 import Foundation
+import os
 import SwiftData
 
 /// Service responsible for persisting and restoring chat sessions using SwiftData.
 /// Operates on a dedicated ModelContext to avoid UI thread contention during saves.
 @MainActor
 final class ChatPersistenceService {
+    private static let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "io.devflow", category: "ChatPersistence")
     private let modelContainer: ModelContainer
     private let modelContext: ModelContext
 
@@ -27,7 +29,7 @@ final class ChatPersistenceService {
             let persistentSessions = try modelContext.fetch(descriptor)
             return persistentSessions.map { $0.toChatSession() }
         } catch {
-            print("[ChatPersistenceService] Failed to load sessions: \(error)")
+            Self.logger.error("Failed to load sessions: \(error.localizedDescription)")
             return []
         }
     }
@@ -43,7 +45,7 @@ final class ChatPersistenceService {
             let persistentSessions = try modelContext.fetch(descriptor)
             return persistentSessions.map { $0.toChatSession() }
         } catch {
-            print("[ChatPersistenceService] Failed to load sessions for \(ticketKey): \(error)")
+            Self.logger.error("Failed to load sessions for \(ticketKey): \(error.localizedDescription)")
             return []
         }
     }
@@ -62,7 +64,7 @@ final class ChatPersistenceService {
         do {
             try modelContext.save()
         } catch {
-            print("[ChatPersistenceService] Failed to save session \(session.id): \(error)")
+            Self.logger.error("Failed to save session \(session.id): \(error.localizedDescription)")
         }
     }
 
@@ -77,7 +79,7 @@ final class ChatPersistenceService {
         do {
             try modelContext.save()
         } catch {
-            print("[ChatPersistenceService] Failed to batch save sessions: \(error)")
+            Self.logger.error("Failed to batch save sessions: \(error.localizedDescription)")
         }
     }
 
@@ -90,7 +92,7 @@ final class ChatPersistenceService {
         do {
             try modelContext.save()
         } catch {
-            print("[ChatPersistenceService] Failed to delete session \(id): \(error)")
+            Self.logger.error("Failed to delete session \(id): \(error.localizedDescription)")
         }
     }
 
@@ -100,7 +102,7 @@ final class ChatPersistenceService {
             try modelContext.delete(model: PersistentChatSession.self)
             try modelContext.save()
         } catch {
-            print("[ChatPersistenceService] Failed to delete all sessions: \(error)")
+            Self.logger.error("Failed to delete all sessions: \(error.localizedDescription)")
         }
     }
 
@@ -117,7 +119,7 @@ final class ChatPersistenceService {
             }
             try modelContext.save()
         } catch {
-            print("[ChatPersistenceService] Failed to delete sessions for \(ticketKey): \(error)")
+            Self.logger.error("Failed to delete sessions for \(ticketKey): \(error.localizedDescription)")
         }
     }
 
@@ -138,10 +140,10 @@ final class ChatPersistenceService {
             }
             if !oldSessions.isEmpty {
                 try modelContext.save()
-                print("[ChatPersistenceService] Pruned \(oldSessions.count) old session(s)")
+                Self.logger.info("Pruned \(oldSessions.count) old session(s)")
             }
         } catch {
-            print("[ChatPersistenceService] Failed to prune old sessions: \(error)")
+            Self.logger.error("Failed to prune old sessions: \(error.localizedDescription)")
         }
     }
 

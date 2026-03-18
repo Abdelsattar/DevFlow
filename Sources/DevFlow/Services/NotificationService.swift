@@ -1,4 +1,5 @@
 import Foundation
+import os
 import UserNotifications
 
 /// Desktop notification service for DevFlow events.
@@ -8,6 +9,7 @@ import UserNotifications
 @MainActor
 final class NotificationService {
     static let shared = NotificationService()
+    private static let logger = Logger(subsystem: Bundle.main.bundleIdentifier ?? "io.devflow", category: "Notifications")
 
     private init() {}
 
@@ -114,7 +116,7 @@ final class NotificationService {
         UNUserNotificationCenter.current().add(request) { error in
             if let error {
                 // Log but don't crash — notifications are best-effort
-                print("[NotificationService] Failed to deliver notification: \(error.localizedDescription)")
+                Self.logger.error("Failed to deliver notification: \(error.localizedDescription)")
             }
         }
     }

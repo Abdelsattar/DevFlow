@@ -20,9 +20,8 @@
     <string>6.0</string>
 
     <!-- Hide Dock icon — menu bar only -->
-    <!-- Temporarily set to false for debugging; set back to true for production -->
     <key>LSUIElement</key>
-    <false/>
+    <true/>
 
     <!-- Minimum macOS version -->
     <key>LSMinimumSystemVersion</key>
