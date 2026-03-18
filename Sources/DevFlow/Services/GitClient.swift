@@ -124,6 +124,46 @@ final class GitClient {
             .filter { !$0.isEmpty }
     }
 
+    // MARK: - Worktree Operations
+
+    /// Create a linked worktree at `worktreePath` on a new branch `branchName`.
+    /// Uses `git worktree add <worktreePath> -b <branchName>` so the main repo
+    /// working tree is left untouched while each ticket gets its own directory.
+    ///
+    /// - Parameters:
+    ///   - branchName: The new branch to create inside the worktree.
+    ///   - repoPath: The main repository root.
+    ///   - worktreePath: Absolute path where the worktree will be checked out.
+    func createWorktree(branch branchName: String, at repoPath: String, worktreePath: String) async throws {
+        // Check if branch already exists; if so, use existing branch without -b
+        let existing = try await run(["branch", "--list", branchName], in: repoPath)
+        if existing.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            _ = try await run(["worktree", "add", worktreePath, "-b", branchName], in: repoPath)
+        } else {
+            // Branch exists — attach worktree to it (e.g. on retry after crash)
+            _ = try await run(["worktree", "add", worktreePath, branchName], in: repoPath)
+        }
+    }
+
+    /// Remove a linked worktree and prune the worktree metadata.
+    ///
+    /// - Parameters:
+    ///   - worktreePath: Absolute path of the worktree to remove.
+    ///   - repoPath: The main repository root.
+    func removeWorktree(at worktreePath: String, from repoPath: String) async throws {
+        _ = try await run(["worktree", "remove", "--force", worktreePath], in: repoPath)
+        // Prune stale worktree references
+        _ = try? await run(["worktree", "prune"], in: repoPath)
+    }
+
+    /// Derive a stable worktree path next to the repo for a given branch name.
+    /// Path format: `<repoParent>/.jetflow-worktrees/<branchName>`
+    nonisolated static func worktreePath(branchName: String, repoPath: String) -> String {
+        let parent = (repoPath as NSString).deletingLastPathComponent
+        let safeName = branchName.replacingOccurrences(of: "/", with: "-")
+        return "\(parent)/.jetflow-worktrees/\(safeName)"
+    }
+
     // MARK: - Status & Diff
 
     /// Get the working tree status as parsed entries.

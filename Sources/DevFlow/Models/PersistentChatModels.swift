@@ -311,6 +311,8 @@ final class PersistentAutonomousFlowRun {
     var createdBranch: String?
     var errorMessage: String?
     var reworkCount: Int
+    /// Absolute path of the linked worktree for this run, for crash recovery cleanup.
+    var worktreePath: String?
     var startedAt: Date
     var completedAt: Date?
 
@@ -329,6 +331,7 @@ final class PersistentAutonomousFlowRun {
         createdBranch: String? = nil,
         errorMessage: String? = nil,
         reworkCount: Int = 0,
+        worktreePath: String? = nil,
         startedAt: Date = Date(),
         completedAt: Date? = nil
     ) {
@@ -346,6 +349,7 @@ final class PersistentAutonomousFlowRun {
         self.createdBranch = createdBranch
         self.errorMessage = errorMessage
         self.reworkCount = reworkCount
+        self.worktreePath = worktreePath
         self.startedAt = startedAt
         self.completedAt = completedAt
     }

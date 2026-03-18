@@ -173,6 +173,8 @@ final class AutonomousFlowRun: Identifiable {
     var createdPR: GitHubPullRequest?
     var errorMessage: String?
     var reworkCount: Int
+    /// Absolute path to the linked worktree for this run, set once the worktree is created.
+    var worktreePath: String?
     let startedAt: Date
     var completedAt: Date?
 
