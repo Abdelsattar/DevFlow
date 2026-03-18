@@ -69,6 +69,32 @@ enum RetryHelper {
         throw lastError ?? CancellationError()
     }
 
+    /// Execute an async operation with a hard deadline, throwing `ChatSessionError.timeout` if it
+    /// doesn't complete in time. Cancels the underlying work when the deadline fires.
+    ///
+    /// - Parameters:
+    ///   - timeout: Maximum time to allow.
+    ///   - operation: The async throwing work to run.
+    /// - Returns: The result of `operation`.
+    /// - Throws: `ChatSessionError.timeout` when the deadline is exceeded;
+    ///           any error thrown by `operation` otherwise.
+    static func withTimeout<T: Sendable>(
+        _ timeout: Duration,
+        operation: @escaping @Sendable () async throws -> T
+    ) async throws -> T {
+        try await withThrowingTaskGroup(of: T.self) { group in
+            group.addTask { try await operation() }
+            group.addTask {
+                try await Task.sleep(for: timeout)
+                throw ChatSessionError.timeout
+            }
+            // The first child to finish wins; cancel the other.
+            let result = try await group.next()!
+            group.cancelAll()
+            return result
+        }
+    }
+
     /// Determine if an error is retryable based on the configuration.
     private static func shouldRetry(error: Error, configuration: RetryConfiguration) -> Bool {
         // Don't retry cancellation

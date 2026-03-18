@@ -173,36 +173,47 @@ final class AutonomousFlowOrchestrator {
             // Fresh start or retry from failed
             try Task.checkCancellation()
 
-            // PRE-FLIGHT CHECKS
-            run.advanceTo(.creatingBranch, message: "Running pre-flight checks...")
-            try await preflightChecks(repoPath: repoPath, gitClient: gitClient)
+            // PRE-FLIGHT CHECKS (skip on retry if branch already created)
+            if run.createdBranch == nil {
+                run.advanceTo(.creatingBranch, message: "Running pre-flight checks...")
+                try await preflightChecks(repoPath: repoPath, gitClient: gitClient)
 
-            // STAGE 1: Create branch
-            let branchName = GitClient.branchName(ticketKey: ticket.key, summary: ticket.fields.summary)
-            try await gitClient.createBranch(branchName, at: repoPath)
-            run.createdBranch = branchName
-            run.advanceTo(.planning, message: "Created branch: \(branchName)")
-            persistRunState(run)
+                // STAGE 1: Create branch
+                let branchName = GitClient.branchName(ticketKey: ticket.key, summary: ticket.fields.summary)
+                try await gitClient.createBranch(branchName, at: repoPath)
+                run.createdBranch = branchName
+                run.advanceTo(.planning, message: "Created branch: \(branchName)")
+                persistRunState(run)
+            } else {
+                // Retry after failure: branch already exists — switch to it
+                let branchName = run.createdBranch!
+                run.advanceTo(.creatingBranch, message: "Resuming on existing branch: \(branchName)")
+                try await gitClient.checkout(branchName, at: repoPath)
+                run.advanceTo(.planning, message: "Checked out branch: \(branchName)")
+                persistRunState(run)
+            }
 
             try Task.checkCancellation()
 
-            // STAGE 2: Plan
-            let planSession = try await chatManager.runSessionToCompletion(
-                ticket: ticket,
-                purpose: .plan,
-                timeout: chatStageTimeout
-            )
-            run.planSessionId = planSession.id
-            let planContent = lastAssistantMessage(in: planSession)
-            guard !planContent.isEmpty else {
-                throw AutonomousFlowError.preflightFailed("Plan session produced no output")
-            }
+            // STAGE 2: Plan (skip if plan session already succeeded on a previous attempt)
+            if run.planSessionId == nil {
+                let planSession = try await chatManager.runSessionToCompletion(
+                    ticket: ticket,
+                    purpose: .plan,
+                    timeout: chatStageTimeout
+                )
+                run.planSessionId = planSession.id
+                let planContent = lastAssistantMessage(in: planSession)
+                guard !planContent.isEmpty else {
+                    throw AutonomousFlowError.preflightFailed("Plan session produced no output")
+                }
 
-            // Check for approval gate
-            if run.approvalMode == .approveAfterPlan || run.approvalMode == .approveAfterBoth {
-                run.advanceTo(.awaitingPlanApproval, message: "Plan complete — awaiting approval")
-                persistRunState(run)
-                return
+                // Check for approval gate
+                if run.approvalMode == .approveAfterPlan || run.approvalMode == .approveAfterBoth {
+                    run.advanceTo(.awaitingPlanApproval, message: "Plan complete — awaiting approval")
+                    persistRunState(run)
+                    return
+                }
             }
 
             run.advanceTo(.implementing, message: "Plan complete")
@@ -241,34 +252,37 @@ final class AutonomousFlowOrchestrator {
         let repoPath = appState.workspacePath
         let gitClient = appState.gitClient
 
-        run.advanceTo(.implementing, message: "Starting implementation...")
-        persistRunState(run)
-
         try Task.checkCancellation()
 
-        // Get plan content from the plan session
-        let planContent: String
-        if let planSessionId = run.planSessionId,
-           let planSession = chatManager.sessions.first(where: { $0.id == planSessionId }) {
-            planContent = lastAssistantMessage(in: planSession)
-        } else {
-            planContent = ""
-        }
-
-        let implMessage = planContent.isEmpty ? nil : PromptBuilder.buildImplementWithPlanContext(plan: planContent)
-        let implSession = try await chatManager.runSessionToCompletion(
-            ticket: ticket,
-            purpose: .implement,
-            additionalUserMessage: implMessage,
-            timeout: chatStageTimeout
-        )
-        run.implementSessionId = implSession.id
-
-        // Check for approval gate
-        if run.approvalMode == .approveAfterBoth {
-            run.advanceTo(.awaitingImplApproval, message: "Implementation complete — awaiting approval")
+        // Skip if the implement session already succeeded (retry path)
+        if run.implementSessionId == nil {
+            run.advanceTo(.implementing, message: "Starting implementation...")
             persistRunState(run)
-            return
+
+            // Get plan content from the plan session
+            let planContent: String
+            if let planSessionId = run.planSessionId,
+               let planSession = chatManager.sessions.first(where: { $0.id == planSessionId }) {
+                planContent = lastAssistantMessage(in: planSession)
+            } else {
+                planContent = ""
+            }
+
+            let implMessage = planContent.isEmpty ? nil : PromptBuilder.buildImplementWithPlanContext(plan: planContent)
+            let implSession = try await chatManager.runSessionToCompletion(
+                ticket: ticket,
+                purpose: .implement,
+                additionalUserMessage: implMessage,
+                timeout: chatStageTimeout
+            )
+            run.implementSessionId = implSession.id
+
+            // Check for approval gate
+            if run.approvalMode == .approveAfterBoth {
+                run.advanceTo(.awaitingImplApproval, message: "Implementation complete — awaiting approval")
+                persistRunState(run)
+                return
+            }
         }
 
         try await executeApplyAndBeyond(
@@ -314,7 +328,7 @@ final class AutonomousFlowOrchestrator {
         implSession.changeSets.append(changeSet)
         run.changeSetId = changeSet.id
 
-        try ChangeSetService.applyAllChanges(changeSet, basePath: repoPath)
+        try await ChangeSetService.applyAllChanges(changeSet, basePath: repoPath)
         run.advanceTo(.committing, message: "Applied \(fileChanges.count) file(s)")
         persistRunState(run)
 
@@ -379,7 +393,7 @@ final class AutonomousFlowOrchestrator {
                 )
                 reworkSession.changeSets.append(reworkChangeSet)
 
-                try ChangeSetService.applyAllChanges(reworkChangeSet, basePath: repoPath)
+                try await ChangeSetService.applyAllChanges(reworkChangeSet, basePath: repoPath)
                 try await ChangeSetService.commitChanges(reworkChangeSet, at: repoPath, gitClient: gitClient)
             }
 

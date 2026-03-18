@@ -28,19 +28,15 @@ enum ChangeSetServiceError: Error, LocalizedError {
 enum ChangeSetService {
 
     /// Apply a single file change to disk at the given base path.
-    static func applyChange(_ change: FileChange, basePath: String) throws {
+    /// Disk I/O is performed on a background thread to avoid blocking the main actor.
+    static func applyChange(_ change: FileChange, basePath: String) async throws {
         let fullPath = (basePath as NSString).appendingPathComponent(change.filePath)
+        let changeType = change.changeType
+        let content = change.content
 
-        if change.changeType == .delete {
-            try FileManager.default.removeItem(atPath: fullPath)
-        } else {
-            let dir = (fullPath as NSString).deletingLastPathComponent
-            try FileManager.default.createDirectory(
-                atPath: dir,
-                withIntermediateDirectories: true
-            )
-            try change.content.write(toFile: fullPath, atomically: true, encoding: .utf8)
-        }
+        try await Task.detached(priority: .userInitiated) {
+            try ChangeSetService.writeFileToDisk(changeType: changeType, fullPath: fullPath, content: content)
+        }.value
 
         change.isApplied = true
         change.isRejected = false
@@ -49,13 +45,13 @@ enum ChangeSetService {
 
     /// Apply all pending changes in a change set to disk.
     /// Throws on the first failure after marking the individual change's error.
-    static func applyAllChanges(_ changeSet: ChangeSet, basePath: String) throws {
+    static func applyAllChanges(_ changeSet: ChangeSet, basePath: String) async throws {
         let pending = changeSet.changes.filter(\.isPending)
         guard !pending.isEmpty else { throw ChangeSetServiceError.noChangesToApply }
 
         for change in pending {
             do {
-                try applyChange(change, basePath: basePath)
+                try await applyChange(change, basePath: basePath)
             } catch {
                 change.applyError = error.localizedDescription
                 throw ChangeSetServiceError.applyFailed(
@@ -84,5 +80,25 @@ enum ChangeSetService {
         try await gitClient.addAll(at: repoPath)
         _ = try await gitClient.commit(message: message, at: repoPath)
         changeSet.isCommitted = true
+    }
+
+    // MARK: - Private
+
+    /// Pure disk-write helper — runs on whichever thread calls it (intended for background threads).
+    nonisolated private static func writeFileToDisk(
+        changeType: FileChangeType,
+        fullPath: String,
+        content: String
+    ) throws {
+        if changeType == .delete {
+            try FileManager.default.removeItem(atPath: fullPath)
+        } else {
+            let dir = (fullPath as NSString).deletingLastPathComponent
+            try FileManager.default.createDirectory(
+                atPath: dir,
+                withIntermediateDirectories: true
+            )
+            try content.write(toFile: fullPath, atomically: true, encoding: .utf8)
+        }
     }
 }

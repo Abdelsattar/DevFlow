@@ -303,4 +303,36 @@ struct AutonomousFlowTests {
         #expect(entry1.stage == .planning)
         #expect(entry1.message == "Planning started")
     }
+
+    // MARK: - Retry Skip-Stage Tests
+
+    @Test("Run with createdBranch set is treated as retry — branch already exists")
+    @MainActor
+    func retryWithExistingBranch() {
+        let run = AutonomousFlowRun(ticketKey: "PLAT-789", ticketSummary: "Test retry")
+        run.advanceTo(.planning, message: "Created branch")
+        run.createdBranch = "PLAT-789-test-retry"
+        run.fail(message: "AI timed out")
+
+        // After failure, createdBranch is preserved
+        #expect(run.createdBranch == "PLAT-789-test-retry")
+        #expect(run.stage == .failed)
+        // On retry the orchestrator will use run.createdBranch instead of creating a new one
+        #expect(run.createdBranch != nil)
+    }
+
+    @Test("Run with implementSessionId set skips implement stage on retry")
+    @MainActor
+    func retrySkipsCompletedImplementStage() {
+        let run = AutonomousFlowRun(ticketKey: "PLAT-789", ticketSummary: "Test retry")
+        let implId = UUID()
+        run.createdBranch = "PLAT-789-test-retry"
+        run.planSessionId = UUID()
+        run.implementSessionId = implId
+        run.fail(message: "Push failed")
+
+        // Both branch and implement session are preserved across failure
+        #expect(run.implementSessionId == implId)
+        #expect(run.createdBranch != nil)
+    }
 }

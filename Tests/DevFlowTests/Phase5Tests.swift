@@ -195,6 +195,51 @@ struct RetryHelperTests {
         #expect(counter.count == 2)
     }
 
+    @Test("withTimeout throws timeout error when operation exceeds deadline")
+    func withTimeoutExpires() async throws {
+        do {
+            _ = try await RetryHelper.withTimeout(.milliseconds(50)) {
+                // Simulate an operation that never finishes
+                try await Task.sleep(for: .seconds(60))
+                return "should not reach"
+            }
+            Issue.record("Expected ChatSessionError.timeout to be thrown")
+        } catch let error as ChatSessionError {
+            guard case .timeout = error else {
+                Issue.record("Expected ChatSessionError.timeout, got \(error)")
+                return
+            }
+            // Expected path
+        } catch {
+            Issue.record("Expected ChatSessionError.timeout, got \(error)")
+        }
+    }
+
+    @Test("withTimeout returns result when operation completes before deadline")
+    func withTimeoutSucceeds() async throws {
+        let result = try await RetryHelper.withTimeout(.seconds(5)) {
+            return "fast result"
+        }
+        #expect(result == "fast result")
+    }
+
+    @Test("withTimeout propagates non-timeout errors from the operation")
+    func withTimeoutPropagatesError() async throws {
+        do {
+            _ = try await RetryHelper.withTimeout(.seconds(5)) {
+                throw CopilotServiceError.notConfigured
+            } as String
+            Issue.record("Expected error to be thrown")
+        } catch let error as CopilotServiceError {
+            guard case .notConfigured = error else {
+                Issue.record("Expected notConfigured, got \(error)")
+                return
+            }
+        } catch {
+            Issue.record("Unexpected error type: \(error)")
+        }
+    }
+
     @Test("Default configuration has expected values")
     func defaultConfiguration() {
         let config = RetryConfiguration.default
