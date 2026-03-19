@@ -154,6 +154,19 @@ final class JiraService {
         let isLast: Bool
     }
 
+    /// Fetch a single project by its key. Returns nil if not found.
+    func fetchProject(key: String) async throws -> JiraProject? {
+        let request = try await buildRequest(path: "/rest/api/3/project/\(key.uppercased())")
+        let urlSession = session
+        let jsonDecoder = decoder
+        return try await RetryHelper.withRetry {
+            let (data, response) = try await urlSession.data(for: request)
+            guard let httpResponse = response as? HTTPURLResponse else { return nil }
+            guard httpResponse.statusCode == 200 else { return nil }
+            return try? jsonDecoder.decode(JiraProject.self, from: data)
+        }
+    }
+
     /// Fetch one page of JIRA projects, optionally filtered by a search query.
     /// - Parameters:
     ///   - query: Server-side name/key filter (sent to the Jira API).
@@ -210,10 +223,8 @@ final class JiraService {
         switch scope {
         case .currentSprint:
             let activeSprintIDs = try await fetchActiveSprintIDs(project: project)
-            guard let currentSprintClause = Self.makeCurrentSprintClause(sprintIDs: activeSprintIDs) else {
-                return []
-            }
-            scopeClause = currentSprintClause
+            // Fall back to openSprints() JQL if no sprint IDs were found (e.g. Kanban board)
+            scopeClause = Self.makeCurrentSprintClause(sprintIDs: activeSprintIDs) ?? "sprint in openSprints()"
         case .allTickets, .backlog:
             scopeClause = scope.jqlClause
         }
@@ -260,6 +271,9 @@ final class JiraService {
                     do {
                         return try jsonDecoder.decode(JiraSearchResponse.self, from: data)
                     } catch {
+                        let raw = String(data: data, encoding: .utf8) ?? "<binary>"
+                        print("[JiraService] Decode error: \(error)")
+                        print("[JiraService] Raw response (first 500 chars): \(raw.prefix(500))")
                         throw JiraServiceError.decodingError(error.localizedDescription)
                     }
                 case 401, 403:

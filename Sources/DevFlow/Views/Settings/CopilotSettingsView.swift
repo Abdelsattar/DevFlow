@@ -233,6 +233,7 @@ struct CopilotSettingsView: View {
         Section("Copilot API Gateway") {
             TextField("Gateway URL", text: $gatewayURL, prompt: Text("http://localhost:3030/v1"))
                 .textFieldStyle(.roundedBorder)
+                .multilineTextAlignment(.leading)
 
             if !gatewayURL.isEmpty && !isValidGatewayURL(gatewayURL) {
                 Label("Please enter a valid URL (e.g. http://localhost:3030/v1)", systemImage: "exclamationmark.triangle")

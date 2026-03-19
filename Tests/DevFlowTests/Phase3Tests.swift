@@ -232,7 +232,7 @@ struct GitClientHelperTests {
             ticketKey: "PLAT-123",
             summary: "Add user authentication flow"
         )
-        #expect(branch == "PLAT-123-add-user-authentication-flow")
+        #expect(branch == "PLAT_123-add-user-authentication-flow")
     }
 
     @Test("Branch name handles special characters in summary")
@@ -241,7 +241,7 @@ struct GitClientHelperTests {
             ticketKey: "PLAT-456",
             summary: "Fix bug: API returns 500 on /users endpoint!"
         )
-        #expect(branch.hasPrefix("PLAT-456-"))
+        #expect(branch.hasPrefix("PLAT_456-"))
         #expect(!branch.contains(" "))
         #expect(!branch.contains(":"))
         #expect(!branch.contains("!"))
@@ -252,14 +252,14 @@ struct GitClientHelperTests {
         let longSummary = String(repeating: "a very long description ", count: 10)
         let branch = GitClient.branchName(ticketKey: "PLAT-789", summary: longSummary)
         // The slug portion should be capped at 50 chars
-        let slug = branch.replacingOccurrences(of: "PLAT-789-", with: "")
+        let slug = branch.replacingOccurrences(of: "PLAT_789-", with: "")
         #expect(slug.count <= 50)
     }
 
     @Test("Branch name preserves ticket key casing")
     func branchNameCasing() {
         let branch = GitClient.branchName(ticketKey: "PLAT-100", summary: "Test")
-        #expect(branch.hasPrefix("PLAT-100-"))
+        #expect(branch.hasPrefix("PLAT_100-"))
     }
 
     @Test("Commit message generation")

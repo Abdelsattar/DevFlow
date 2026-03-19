@@ -19,10 +19,6 @@
     <key>CFBundleInfoDictionaryVersion</key>
     <string>6.0</string>
 
-    <!-- Hide Dock icon — menu bar only -->
-    <key>LSUIElement</key>
-    <true/>
-
     <!-- Minimum macOS version -->
     <key>LSMinimumSystemVersion</key>
     <string>14.0</string>

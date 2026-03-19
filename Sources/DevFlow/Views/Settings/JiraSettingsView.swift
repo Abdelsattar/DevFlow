@@ -11,7 +11,7 @@ struct JiraSettingsView: View {
     @State private var baseURL: String = ""
     @State private var email: String = ""
     @State private var apiToken: String = ""
-    @State private var projectKeysText: String = ""
+    @State private var projectKeyText: String = ""
 
     // OAuth fields
     @State private var oauthClientId: String = ""
@@ -24,6 +24,7 @@ struct JiraSettingsView: View {
     @State private var isTesting: Bool = false
     @State private var isSaving: Bool = false
     @State private var showSavedConfirmation: Bool = false
+    @State private var isRefreshing: Bool = false
 
     var body: some View {
         Form {
@@ -45,19 +46,31 @@ struct JiraSettingsView: View {
                 basicAuthSection
             }
 
-            Section("Projects") {
-                TextField("Project Keys", text: $projectKeysText, prompt: Text("PLAT, DATA, MOBILE"))
-                    .textFieldStyle(.roundedBorder)
-
-                Text("Comma-separated JIRA project keys. Tickets from these projects will be shown.")
+            Section("Project") {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("Project Key")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                    TextField("", text: $projectKeyText, prompt: Text("PROJ"))
+                        .textFieldStyle(.roundedBorder)
+                        .multilineTextAlignment(.leading)
+                }
+                Text("The JIRA project key whose tickets will be shown.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
 
             Section {
                 HStack {
-                    if showSavedConfirmation {
-                        Label("Saved", systemImage: "checkmark.circle.fill")
+                    if isRefreshing {
+                        HStack(spacing: 6) {
+                            ProgressView().controlSize(.small)
+                            Text("Refreshing tickets...")
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                    } else if showSavedConfirmation {
+                        Label("Saved — tickets reloaded", systemImage: "checkmark.circle.fill")
                             .font(.caption)
                             .foregroundStyle(.green)
                             .transition(.opacity)
@@ -66,10 +79,10 @@ struct JiraSettingsView: View {
                     Spacer()
 
                     Button("Save") {
-                        save()
+                        Task { await saveAndRefresh() }
                     }
                     .buttonStyle(.borderedProminent)
-                    .disabled(!canSave)
+                    .disabled(!canSave || isRefreshing)
                 }
             }
         }
@@ -110,6 +123,7 @@ struct JiraSettingsView: View {
                             .foregroundStyle(.secondary)
                         TextField("", text: $oauthClientId, prompt: Text("Your Atlassian OAuth 2.0 Client ID"))
                             .textFieldStyle(.roundedBorder)
+                            .multilineTextAlignment(.leading)
                     }
 
                     HStack {
@@ -152,26 +166,42 @@ struct JiraSettingsView: View {
     @ViewBuilder
     private var basicAuthSection: some View {
         Section("JIRA Cloud Connection") {
-            TextField("Base URL", text: $baseURL, prompt: Text("https://yourcompany.atlassian.net"))
-                .textFieldStyle(.roundedBorder)
-
-            if !baseURL.isEmpty && !isValidURL(baseURL) {
-                Label("Please enter a valid URL (e.g. https://yourcompany.atlassian.net)", systemImage: "exclamationmark.triangle")
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Base URL")
                     .font(.caption)
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(.secondary)
+                TextField("", text: $baseURL, prompt: Text("https://yourcompany.atlassian.net"))
+                    .textFieldStyle(.roundedBorder)
+                    .multilineTextAlignment(.leading)
+                if !baseURL.isEmpty && !isValidURL(baseURL) {
+                    Label("Please enter a valid URL (e.g. https://yourcompany.atlassian.net)", systemImage: "exclamationmark.triangle")
+                        .font(.caption)
+                        .foregroundStyle(.orange)
+                }
             }
 
-            TextField("Email", text: $email, prompt: Text("you@company.com"))
-                .textFieldStyle(.roundedBorder)
-
-            if !email.isEmpty && !isValidEmail(email) {
-                Label("Please enter a valid email address", systemImage: "exclamationmark.triangle")
+            VStack(alignment: .leading, spacing: 4) {
+                Text("Email")
                     .font(.caption)
-                    .foregroundStyle(.orange)
+                    .foregroundStyle(.secondary)
+                TextField("", text: $email, prompt: Text("you@company.com"))
+                    .textFieldStyle(.roundedBorder)
+                    .multilineTextAlignment(.leading)
+                if !email.isEmpty && !isValidEmail(email) {
+                    Label("Please enter a valid email address", systemImage: "exclamationmark.triangle")
+                        .font(.caption)
+                        .foregroundStyle(.orange)
+                }
             }
 
-            SecureField("API Token", text: $apiToken, prompt: Text("Your JIRA API token"))
-                .textFieldStyle(.roundedBorder)
+            VStack(alignment: .leading, spacing: 4) {
+                Text("API Token")
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                SecureField("", text: $apiToken, prompt: Text("Your JIRA API token"))
+                    .textFieldStyle(.roundedBorder)
+                    .multilineTextAlignment(.leading)
+            }
 
             HStack {
                 connectionStatusBadge
@@ -246,7 +276,7 @@ struct JiraSettingsView: View {
         authMethod = appState.jiraAuthMethod
         baseURL = appState.jiraBaseURL
         email = appState.jiraEmail
-        projectKeysText = appState.jiraProjectKeys.joined(separator: ", ")
+        projectKeyText = appState.jiraProjectKey
         oauthClientId = appState.jiraOAuthClientId
         isOAuthConnected = appState.jiraOAuthService.isAuthenticated
         oauthCloudName = appState.jiraCloudName
@@ -270,11 +300,11 @@ struct JiraSettingsView: View {
             appState.jiraBaseURL = baseURL.trimmingCharacters(in: CharacterSet(charactersIn: "/ "))
             appState.jiraEmail = email.trimmingCharacters(in: .whitespaces)
 
-            let keys = projectKeysText
+            let keys = projectKeyText
                 .split(separator: ",")
                 .map { $0.trimmingCharacters(in: .whitespaces).uppercased() }
                 .filter { !$0.isEmpty }
-            appState.jiraProjectKeys = keys
+            appState.jiraProjectKey = keys.first ?? ""
 
             do {
                 try appState.keychainService.saveOrUpdate(
@@ -288,14 +318,26 @@ struct JiraSettingsView: View {
             }
         }
 
-        // Save project keys for both auth methods
-        let keys = projectKeysText
+        // Save project key for both auth methods
+        let keys = projectKeyText
             .split(separator: ",")
             .map { $0.trimmingCharacters(in: .whitespaces).uppercased() }
             .filter { !$0.isEmpty }
-        appState.jiraProjectKeys = keys
+        appState.jiraProjectKey = keys.first ?? ""
+    }
 
-        showSaveConfirmation()
+    private func saveAndRefresh() async {
+        save()
+        isRefreshing = true
+        defer { isRefreshing = false }
+        await withTaskGroup(of: Void.self) { group in
+            group.addTask { await appState.loadTickets() }
+            group.addTask { await appState.loadComponents() }
+        }
+        withAnimation { showSavedConfirmation = true }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+            withAnimation { showSavedConfirmation = false }
+        }
     }
 
     private func signInWithOAuth() async {
@@ -319,17 +361,6 @@ struct JiraSettingsView: View {
         isOAuthConnected = false
         oauthCloudName = ""
         connectionStatus = .untested
-    }
-
-    private func showSaveConfirmation() {
-        withAnimation {
-            showSavedConfirmation = true
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            withAnimation {
-                showSavedConfirmation = false
-            }
-        }
     }
 
     private func testConnection() async {

@@ -50,14 +50,9 @@ final class AppState {
         set { UserDefaults.standard.set(newValue, forKey: "jiraEmail") }
     }
 
-    var jiraProjectKeys: [String] {
-        get { UserDefaults.standard.stringArray(forKey: "jiraProjectKeys") ?? [] }
-        set { UserDefaults.standard.set(newValue, forKey: "jiraProjectKeys") }
-    }
-
-    var selectedComponentIds: [String] {
-        get { UserDefaults.standard.stringArray(forKey: "selectedComponentIds") ?? [] }
-        set { UserDefaults.standard.set(newValue, forKey: "selectedComponentIds") }
+    var jiraProjectKey: String {
+        get { UserDefaults.standard.string(forKey: "jiraProjectKey") ?? "" }
+        set { UserDefaults.standard.set(newValue, forKey: "jiraProjectKey") }
     }
 
     var githubHost: String {
@@ -309,21 +304,17 @@ final class AppState {
         let hasOAuthConfig = jiraAuthMethod == .oauth && !jiraCloudId.isEmpty
         let hasBasicAuthConfig = jiraAuthMethod == .basicAuth && !jiraBaseURL.isEmpty && !jiraEmail.isEmpty
         guard hasOAuthConfig || hasBasicAuthConfig else { return }
-        guard !jiraProjectKeys.isEmpty else { return }
+        guard !jiraProjectKey.isEmpty else { return }
         isLoading = true
         errorMessage = nil
 
         do {
-            var allTickets: [JiraTicket] = []
-            for project in jiraProjectKeys {
-                let projectTickets = try await jiraService.fetchTickets(
-                    project: project,
-                    scope: ticketScope,
-                    assigneeFilter: assigneeFilter
-                )
-                allTickets.append(contentsOf: projectTickets)
-            }
-            tickets = allTickets.sorted { $0.key > $1.key }
+            tickets = try await jiraService.fetchTickets(
+                project: jiraProjectKey,
+                scope: ticketScope,
+                assigneeFilter: assigneeFilter
+            )
+            tickets.sort { $0.key > $1.key }
 
             if let selectedKey = selectedTicket?.key {
                 selectedTicket = tickets.first(where: { $0.key == selectedKey })
@@ -342,15 +333,10 @@ final class AppState {
         let hasOAuthConfig = jiraAuthMethod == .oauth && !jiraCloudId.isEmpty
         let hasBasicAuthConfig = jiraAuthMethod == .basicAuth && !jiraBaseURL.isEmpty
         guard hasOAuthConfig || hasBasicAuthConfig else { return }
-        guard !jiraProjectKeys.isEmpty else { return }
+        guard !jiraProjectKey.isEmpty else { return }
 
         do {
-            var allComponents: [JiraComponent] = []
-            for project in jiraProjectKeys {
-                let components = try await jiraService.fetchComponents(project: project)
-                allComponents.append(contentsOf: components)
-            }
-            availableComponents = allComponents
+            availableComponents = try await jiraService.fetchComponents(project: jiraProjectKey)
         } catch {
             errorMessage = error.localizedDescription
         }

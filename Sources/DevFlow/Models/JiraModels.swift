@@ -18,6 +18,17 @@ struct JiraSearchResponse: Codable, Sendable {
     let issues: [JiraTicket]
     let isLast: Bool?
     let nextPageToken: String?
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        issues = (try? container.decodeIfPresent([JiraTicket].self, forKey: .issues)) ?? []
+        isLast = try container.decodeIfPresent(Bool.self, forKey: .isLast)
+        nextPageToken = try container.decodeIfPresent(String.self, forKey: .nextPageToken)
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case issues, isLast, nextPageToken
+    }
 }
 
 enum TicketScope: String, CaseIterable, Codable, Sendable, Identifiable {
@@ -121,6 +132,23 @@ struct JiraIssueFields: Codable, Sendable {
 
     var plainTextDescription: String {
         description?.toPlainText() ?? "No description"
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        summary = try container.decode(String.self, forKey: .summary)
+        description = try container.decodeIfPresent(ADFDocument.self, forKey: .description)
+        status = try container.decode(JiraStatus.self, forKey: .status)
+        priority = try container.decodeIfPresent(JiraPriority.self, forKey: .priority)
+        assignee = try container.decodeIfPresent(JiraUser.self, forKey: .assignee)
+        // components can be null or missing in some Jira configurations
+        components = (try? container.decodeIfPresent([JiraComponent].self, forKey: .components)) ?? []
+        comment = try container.decodeIfPresent(JiraCommentContainer.self, forKey: .comment)
+        issuetype = try container.decodeIfPresent(JiraIssueType.self, forKey: .issuetype)
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case summary, description, status, priority, assignee, components, comment, issuetype
     }
 }
 
@@ -247,6 +275,18 @@ struct JiraCommentContainer: Codable, Sendable {
     let maxResults: Int?
     let total: Int?
     let comments: [JiraComment]
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        startAt = try container.decodeIfPresent(Int.self, forKey: .startAt)
+        maxResults = try container.decodeIfPresent(Int.self, forKey: .maxResults)
+        total = try container.decodeIfPresent(Int.self, forKey: .total)
+        comments = (try? container.decodeIfPresent([JiraComment].self, forKey: .comments)) ?? []
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case startAt, maxResults, total, comments
+    }
 }
 
 struct JiraComment: Codable, Identifiable, Sendable {

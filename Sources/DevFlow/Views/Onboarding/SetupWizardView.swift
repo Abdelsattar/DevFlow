@@ -25,7 +25,7 @@ struct SetupWizardView: View {
 
     // Step 2: Projects
     @State private var availableProjects: [JiraProject] = []
-    @State private var selectedProjectKeys: Set<String> = []
+    @State private var selectedProjectKey: String = ""
     @State private var isLoadingProjects: Bool = false
     @State private var projectLoadError: String?
     @State private var projectSearch: String = ""
@@ -96,7 +96,7 @@ struct SetupWizardView: View {
             jiraBaseURL = appState.jiraBaseURL.isEmpty ? "" : appState.jiraBaseURL
             jiraEmail = appState.jiraEmail
             jiraOAuthClientId = appState.jiraOAuthClientId
-            selectedProjectKeys = Set(appState.jiraProjectKeys)
+            selectedProjectKey = appState.jiraProjectKey
             githubHost = appState.githubHost.isEmpty ? "" : appState.githubHost
             githubOrg = appState.githubOrganization
             copilotAuthMethod = appState.copilotAuthMethod
@@ -196,6 +196,7 @@ struct SetupWizardView: View {
                         .foregroundStyle(.secondary)
                     TextField("", text: $jiraOAuthClientId, prompt: Text("Your Atlassian OAuth 2.0 Client ID"))
                         .textFieldStyle(.roundedBorder)
+                        .multilineTextAlignment(.leading)
                 }
 
                 HStack {
@@ -284,6 +285,7 @@ struct SetupWizardView: View {
                         .foregroundStyle(.secondary)
                     TextField("", text: $jiraBaseURL, prompt: Text("https://yourcompany.atlassian.net"))
                         .textFieldStyle(.roundedBorder)
+                        .multilineTextAlignment(.leading)
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
@@ -292,6 +294,7 @@ struct SetupWizardView: View {
                         .foregroundStyle(.secondary)
                     TextField("", text: $jiraEmail, prompt: Text("you@company.com"))
                         .textFieldStyle(.roundedBorder)
+                        .multilineTextAlignment(.leading)
                 }
             }
 
@@ -338,6 +341,7 @@ struct SetupWizardView: View {
 
                 SecureField("", text: $jiraAPIToken, prompt: Text("Paste your API token here"))
                     .textFieldStyle(.roundedBorder)
+                    .multilineTextAlignment(.leading)
                     .onChange(of: jiraAPIToken) { _, newValue in
                         if newValue.count >= 10 && !jiraTokenPasted && !jiraEmail.isEmpty && !jiraBaseURL.isEmpty {
                             jiraTokenPasted = true
@@ -366,10 +370,10 @@ struct SetupWizardView: View {
 
     private var projectStep: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Label("Select Projects", systemImage: "folder")
+            Label("Select Project", systemImage: "folder")
                 .font(.headline)
 
-            Text("Choose the JIRA projects whose tickets you want to see in DevFlow.")
+            Text("Choose the JIRA project whose tickets you want to see in DevFlow.")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
@@ -396,6 +400,7 @@ struct SetupWizardView: View {
                 // Search bar — triggers a fresh server-side fetch after 300 ms
                 TextField("", text: $projectSearch, prompt: Text("Search projects..."))
                     .textFieldStyle(.roundedBorder)
+                    .multilineTextAlignment(.leading)
                     .onChange(of: projectSearch) { _, _ in
                         projectSearchTask?.cancel()
                         projectSearchTask = Task {
@@ -405,32 +410,41 @@ struct SetupWizardView: View {
                         }
                     }
 
-                // Project list with infinite scroll (15 per page)
+                // Project list — single selection, selected project always pinned at top
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 0) {
-                        ForEach(availableProjects.sorted { selectedProjectKeys.contains($0.key) && !selectedProjectKeys.contains($1.key) }) { project in
-                            Toggle(isOn: Binding(
-                                get: { selectedProjectKeys.contains(project.key) },
-                                set: { isOn in
-                                    if isOn { selectedProjectKeys.insert(project.key) }
-                                    else { selectedProjectKeys.remove(project.key) }
+                        ForEach(availableProjects) { project in
+                            Button {
+                                // Set selection and move the chosen project to the top of the local list
+                                selectedProjectKey = project.key
+                                if let idx = availableProjects.firstIndex(where: { $0.key == project.key }), idx != 0 {
+                                    var updated = availableProjects
+                                    let pinned = updated.remove(at: idx)
+                                    updated.insert(pinned, at: 0)
+                                    availableProjects = updated
                                 }
-                            )) {
+                            } label: {
                                 HStack(spacing: 8) {
+                                    Image(systemName: selectedProjectKey == project.key ? "checkmark.circle.fill" : "circle")
+                                        .foregroundStyle(selectedProjectKey == project.key ? Color.accentColor : .secondary)
+                                        .frame(width: 16)
                                     projectAvatar(project)
                                     VStack(alignment: .leading, spacing: 1) {
                                         Text(project.name)
                                             .font(.body)
+                                            .foregroundStyle(.primary)
                                         Text(project.key)
                                             .font(.caption)
                                             .foregroundStyle(.secondary)
                                     }
+                                    Spacer()
                                 }
+                                .padding(.horizontal, 8)
+                                .padding(.vertical, 6)
+                                .background(selectedProjectKey == project.key ? Color.accentColor.opacity(0.08) : Color.clear)
+                                .cornerRadius(4)
                             }
-                            .toggleStyle(.checkbox)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-                            .padding(.horizontal, 8)
-                            .padding(.vertical, 6)
+                            .buttonStyle(.plain)
                         }
 
                         // Sentinel that triggers the next page when it scrolls into view
@@ -459,8 +473,8 @@ struct SetupWizardView: View {
                         .stroke(Color.secondary.opacity(0.2), lineWidth: 1)
                 )
 
-                if !selectedProjectKeys.isEmpty {
-                    Label("\(selectedProjectKeys.count) project(s) selected", systemImage: "checkmark.circle.fill")
+                if !selectedProjectKey.isEmpty {
+                    Label("\(selectedProjectKey) selected", systemImage: "checkmark.circle.fill")
                         .font(.caption)
                         .foregroundStyle(.green)
                 }
@@ -562,6 +576,7 @@ struct SetupWizardView: View {
                 if githubOrganizations.count > 1 {
                     TextField("", text: $githubOrgSearch, prompt: Text("Search organizations..."))
                         .textFieldStyle(.roundedBorder)
+                        .multilineTextAlignment(.leading)
                 }
 
                 ScrollView {
@@ -629,6 +644,7 @@ struct SetupWizardView: View {
 
             TextField("", text: $githubHost, prompt: Text("github.com or github.your-company.com"))
                 .textFieldStyle(.roundedBorder)
+                .multilineTextAlignment(.leading)
 
             Text("Leave blank for github.com. Change this only if you use a GitHub Enterprise instance.")
                 .font(.caption)
@@ -680,6 +696,7 @@ struct SetupWizardView: View {
 
             SecureField("", text: $githubPAT, prompt: Text("Paste your Personal Access Token here"))
                 .textFieldStyle(.roundedBorder)
+                .multilineTextAlignment(.leading)
                 .onChange(of: githubPAT) { _, newValue in
                     // Auto-validate when a token is pasted (min length check to avoid partial input)
                     if newValue.count >= 10 && !githubTokenPasted {
@@ -922,6 +939,7 @@ struct SetupWizardView: View {
                     .foregroundStyle(.secondary)
                 TextField("", text: $copilotGatewayURL, prompt: Text("http://localhost:3030/v1"))
                     .textFieldStyle(.roundedBorder)
+                    .multilineTextAlignment(.leading)
             }
 
             HStack {
@@ -954,23 +972,24 @@ struct SetupWizardView: View {
 
     private var workspaceStep: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Label("Workspace Directory", systemImage: "folder.badge.gearshape")
+            Label("Project Folder", systemImage: "folder.badge.gearshape")
                 .font(.headline)
 
-            Text("Where are your project repositories cloned?")
+            Text("Where is your project repository located?")
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
 
             HStack {
                 TextField("", text: $workspacePath)
                     .textFieldStyle(.roundedBorder)
+                    .multilineTextAlignment(.leading)
 
                 Button("Browse...") {
                     selectWorkspaceDirectory()
                 }
             }
 
-            Text("DevFlow will create branches and make changes in repositories under this directory.")
+            Text("DevFlow will create branches and make changes inside this project folder.")
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
@@ -1032,7 +1051,7 @@ struct SetupWizardView: View {
             } else {
                 return !jiraConnectedEmail.isEmpty || (!jiraBaseURL.isEmpty && !jiraEmail.isEmpty && !jiraAPIToken.isEmpty)
             }
-        case 1: return !selectedProjectKeys.isEmpty
+        case 1: return !selectedProjectKey.isEmpty
         case 2: return true // GitHub is optional for initial setup
         case 3: return true // Copilot is optional
         case 4: return true
@@ -1081,7 +1100,7 @@ struct SetupWizardView: View {
                 )
             }
         case 1:
-            appState.jiraProjectKeys = Array(selectedProjectKeys)
+            appState.jiraProjectKey = selectedProjectKey
         case 2:
             appState.githubHost = githubHost.trimmingCharacters(in: CharacterSet(charactersIn: "/ "))
             appState.githubOrganization = githubOrg.trimmingCharacters(in: .whitespaces)
@@ -1245,6 +1264,7 @@ struct SetupWizardView: View {
     // MARK: - Project Fetching
 
     /// Resets the list and loads the first page using the current search query.
+    /// If a project is already selected, it is pinned to the top of the list.
     private func fetchProjects() async {
         isLoadingProjects = true
         projectLoadError = nil
@@ -1256,9 +1276,25 @@ struct SetupWizardView: View {
                 query: projectSearch,
                 startAt: 0
             )
-            availableProjects = result.projects
+            var projects = result.projects
             hasMoreProjects = !result.isLast
             projectStartAt = result.projects.count
+
+            // If there is a pre-selected project, ensure it appears at the top.
+            if !selectedProjectKey.isEmpty {
+                if let idx = projects.firstIndex(where: { $0.key == selectedProjectKey }) {
+                    // Already in the first page — move it to index 0.
+                    let pinned = projects.remove(at: idx)
+                    projects.insert(pinned, at: 0)
+                } else if projectSearch.isEmpty {
+                    // Not in the first page — fetch it individually and pin it.
+                    if let pinned = try? await appState.jiraService.fetchProject(key: selectedProjectKey) {
+                        projects.insert(pinned, at: 0)
+                    }
+                }
+            }
+
+            availableProjects = projects
         } catch {
             projectLoadError = error.localizedDescription
         }
@@ -1300,10 +1336,10 @@ struct SetupWizardView: View {
 
     private func selectWorkspaceDirectory() {
         let panel = NSOpenPanel()
-        panel.title = "Select Projects Directory"
+        panel.title = "Select Project Folder"
         panel.canChooseDirectories = true
         panel.canChooseFiles = false
-        panel.canCreateDirectories = true
+        panel.canCreateDirectories = false
         panel.allowsMultipleSelection = false
 
         if panel.runModal() == .OK, let url = panel.url {

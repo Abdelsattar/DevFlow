@@ -18,7 +18,7 @@ struct ComponentsSettingsView: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
 
-                if appState.jiraProjectKeys.isEmpty {
+                if appState.jiraProjectKey.isEmpty {
                     Label("No projects configured. Set up projects in the JIRA settings tab first.", systemImage: "exclamationmark.triangle")
                         .font(.caption)
                         .foregroundStyle(.orange)
@@ -107,8 +107,7 @@ struct ComponentsSettingsView: View {
         .formStyle(.grouped)
         .padding()
         .onAppear {
-            selectedComponentIds = Set(appState.selectedComponentIds)
-            if availableComponents.isEmpty && !appState.jiraProjectKeys.isEmpty {
+            if availableComponents.isEmpty && !appState.jiraProjectKey.isEmpty {
                 Task { await fetchComponents() }
             }
         }
@@ -121,24 +120,16 @@ struct ComponentsSettingsView: View {
         loadError = nil
         defer { isLoading = false }
 
-        var all: [JiraComponent] = []
-        for key in appState.jiraProjectKeys {
-            do {
-                let components = try await appState.jiraService.fetchComponents(project: key)
-                all.append(contentsOf: components)
-            } catch {
-                loadError = error.localizedDescription
-            }
+        do {
+            let components = try await appState.jiraService.fetchComponents(project: appState.jiraProjectKey)
+            availableComponents = components
+                .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
+        } catch {
+            loadError = error.localizedDescription
         }
-        // Deduplicate by id
-        var seen = Set<String>()
-        availableComponents = all.filter { seen.insert($0.id).inserted }
-            .sorted { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
     }
 
     private func save() {
-        appState.selectedComponentIds = Array(selectedComponentIds)
-
         withAnimation { showSavedConfirmation = true }
         DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
             withAnimation { showSavedConfirmation = false }

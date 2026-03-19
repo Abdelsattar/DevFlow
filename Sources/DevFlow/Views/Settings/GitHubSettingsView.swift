@@ -64,6 +64,7 @@ struct GitHubSettingsView: View {
                 if organizations.count > 1 {
                     TextField("", text: $orgSearch, prompt: Text("Search organizations..."))
                         .textFieldStyle(.roundedBorder)
+                        .multilineTextAlignment(.leading)
                 }
 
                 ScrollView {
@@ -142,6 +143,7 @@ struct GitHubSettingsView: View {
             VStack(alignment: .leading, spacing: 4) {
                 TextField("Host", text: $host, prompt: Text("github.com or github.your-company.com"))
                     .textFieldStyle(.roundedBorder)
+                    .multilineTextAlignment(.leading)
                     .onChange(of: host, initial: false) { _, newValue in
                         let trimmed = newValue.trimmingCharacters(in: CharacterSet(charactersIn: "/ "))
                         let stripped: String
@@ -184,6 +186,7 @@ struct GitHubSettingsView: View {
         Section("Paste Token") {
             SecureField("Personal Access Token", text: $pat, prompt: Text("Paste your token here"))
                 .textFieldStyle(.roundedBorder)
+                .multilineTextAlignment(.leading)
 
             HStack {
                 connectionStatusView

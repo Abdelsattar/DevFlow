@@ -17,11 +17,6 @@ struct SettingsView: View {
                     Label("GitHub", systemImage: "arrow.triangle.branch")
                 }
 
-            ComponentsSettingsView()
-                .tabItem {
-                    Label("Components", systemImage: "square.3.layers.3d")
-                }
-
             CopilotSettingsView()
                 .tabItem {
                     Label("Copilot", systemImage: "brain")
@@ -51,17 +46,18 @@ struct GeneralSettingsView: View {
 
     var body: some View {
         Form {
-            Section("Workspace") {
+            Section("Project Folder") {
                 HStack {
-                    TextField("Projects directory", text: $workspacePath)
+                    TextField("Project folder path", text: $workspacePath)
                         .textFieldStyle(.roundedBorder)
+                        .multilineTextAlignment(.leading)
 
                     Button("Browse...") {
                         selectDirectory()
                     }
                 }
 
-                Text("Local directory where repositories are cloned.")
+                Text("The local folder for your project repository.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -152,10 +148,10 @@ struct GeneralSettingsView: View {
 
     private func selectDirectory() {
         let panel = NSOpenPanel()
-        panel.title = "Select Projects Directory"
+        panel.title = "Select Project Folder"
         panel.canChooseDirectories = true
         panel.canChooseFiles = false
-        panel.canCreateDirectories = true
+        panel.canCreateDirectories = false
         panel.allowsMultipleSelection = false
 
         if panel.runModal() == .OK, let url = panel.url {

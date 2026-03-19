@@ -1,6 +1,16 @@
-# DevFlow 🚀
+<div align="center">
+  <img src="Sources/DevFlow/Assets.xcassets/AppIcon.appiconset/icon_256x256.png" width="128" alt="DevFlow icon" />
 
-DevFlow is a native macOS app built to turn a **Jira ticket into a ready-to-merge pull request** without juggling five different tools. It keeps ticket context, AI assistance, local git work, and GitHub handoff in one place so the flow feels continuous instead of fragmented.
+  # DevFlow
+
+  **Turn a Jira ticket into a ready-to-merge pull request — without juggling five different tools.**
+
+  ![Platform](https://img.shields.io/badge/platform-macOS%2014%2B-lightgrey?style=flat-square)
+  ![Swift](https://img.shields.io/badge/Swift-6-orange?style=flat-square)
+  ![Status](https://img.shields.io/badge/status-beta%20soon-blue?style=flat-square)
+</div>
+
+DevFlow is a native macOS app that keeps ticket context, AI assistance, local git work, and GitHub handoff in one place so the flow feels continuous instead of fragmented.
 
 > **Platform:** macOS 14 Sonoma or later  
 > **Stack:** Swift 6 · SwiftUI · SwiftData · no external runtime dependencies
@@ -142,10 +152,7 @@ If you want this repository page to feel more alive, these are the highest-value
 
 - Add a short **20-30 second hero GIF** showing ticket → suggested change → PR creation.
 - Add **2 or 3 annotated screenshots** for onboarding, ticket detail, and diff review.
-- Use a small set of **badges or accent colors** only if they support clarity; one calm blue/teal accent will usually look better than a rainbow row.
 - Create a **social preview image** that matches the app style so links look polished when shared.
-
-These additions would make the GitHub page feel more premium without turning the README into marketing noise.
 
 ---
 

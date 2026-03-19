@@ -240,14 +240,16 @@ final class GitClient {
     // MARK: - Branch Name Generation
 
     /// Generate a branch name from a JIRA ticket key and summary.
-    /// Format: `TICKET-123-short-description`
+    /// Format: `TICKET_123-short-description`
     nonisolated static func branchName(ticketKey: String, summary: String) -> String {
         let slug = summary
             .lowercased()
             .replacingOccurrences(of: "[^a-z0-9]+", with: "-", options: .regularExpression)
             .trimmingCharacters(in: CharacterSet(charactersIn: "-"))
             .prefix(50)
-        return "\(ticketKey)-\(slug)"
+        // Use underscore as separator within the ticket key (e.g. PLAT-123 → PLAT_123)
+        let normalizedKey = ticketKey.replacingOccurrences(of: "-", with: "_")
+        return "\(normalizedKey)-\(slug)"
     }
 
     /// Generate a commit message from a JIRA ticket key and description.
@@ -301,35 +303,43 @@ final class GitClient {
         // Launch three independent blocking operations on real OS threads so they
         // run concurrently.  Using DispatchQueue.global() keeps them off the Swift
         // cooperative pool and avoids pool-starvation deadlocks.
-        async let stdoutData: Data = withCheckedContinuation { cont in
-            DispatchQueue.global(qos: .userInitiated).async {
-                cont.resume(returning: stdoutPipe.fileHandleForReading.readDataToEndOfFile())
+        //
+        // withTaskCancellationHandler ensures the git process is terminated when the
+        // parent Task is cancelled, releasing any git lock files (.git/HEAD.lock,
+        // .git/index.lock) immediately so subsequent runs are not blocked.
+        return try await withTaskCancellationHandler {
+            async let stdoutData: Data = withCheckedContinuation { cont in
+                DispatchQueue.global(qos: .userInitiated).async {
+                    cont.resume(returning: stdoutPipe.fileHandleForReading.readDataToEndOfFile())
+                }
             }
-        }
-        async let stderrData: Data = withCheckedContinuation { cont in
-            DispatchQueue.global(qos: .userInitiated).async {
-                cont.resume(returning: stderrPipe.fileHandleForReading.readDataToEndOfFile())
+            async let stderrData: Data = withCheckedContinuation { cont in
+                DispatchQueue.global(qos: .userInitiated).async {
+                    cont.resume(returning: stderrPipe.fileHandleForReading.readDataToEndOfFile())
+                }
             }
-        }
-        async let exitStatus: Int32 = withCheckedContinuation { cont in
-            DispatchQueue.global(qos: .userInitiated).async {
-                process.waitUntilExit()
-                cont.resume(returning: process.terminationStatus)
+            async let exitStatus: Int32 = withCheckedContinuation { cont in
+                DispatchQueue.global(qos: .userInitiated).async {
+                    process.waitUntilExit()
+                    cont.resume(returning: process.terminationStatus)
+                }
             }
-        }
 
-        let (outData, errData, status) = await (stdoutData, stderrData, exitStatus)
-        let output      = String(data: outData, encoding: .utf8) ?? ""
-        let errorOutput = String(data: errData, encoding: .utf8) ?? ""
+            let (outData, errData, status) = await (stdoutData, stderrData, exitStatus)
+            let output      = String(data: outData, encoding: .utf8) ?? ""
+            let errorOutput = String(data: errData, encoding: .utf8) ?? ""
 
-        if status == 0 {
-            return output
-        } else {
-            throw GitClientError.commandFailed(
-                command: "git \(arguments.joined(separator: " "))",
-                output: errorOutput.isEmpty ? output : errorOutput,
-                exitCode: status
-            )
+            if status == 0 {
+                return output
+            } else {
+                throw GitClientError.commandFailed(
+                    command: "git \(arguments.joined(separator: " "))",
+                    output: errorOutput.isEmpty ? output : errorOutput,
+                    exitCode: status
+                )
+            }
+        } onCancel: {
+            process.terminate()
         }
     }
 }
