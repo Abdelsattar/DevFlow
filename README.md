@@ -5,6 +5,9 @@ DevFlow is a native macOS app built to turn a **Jira ticket into a ready-to-merg
 > **Platform:** macOS 14 Sonoma or later  
 > **Stack:** Swift 6 · SwiftUI · SwiftData · no external runtime dependencies
 
+> **🚧 Status:** DevFlow is still under active development. The first beta release is coming soon.  
+> **🛠️ Want to try it now?** You can clone this repository, open `DevFlow.xcodeproj`, and run the app locally today.
+
 ---
 
 ## Why DevFlow
@@ -91,9 +94,9 @@ Good docs should be honest, so here are the main current constraints:
 
 ### For users
 
-1. Download the latest `.dmg` from the [Releases page](../../releases).
-2. Drag **DevFlow.app** into `/Applications`.
-3. Open the app and complete setup for Jira, GitHub, Copilot, and your local workspace.
+The first beta release is coming soon. Once it lands, you will be able to download the latest `.dmg` from the [Releases page](../../releases), move **DevFlow.app** into `/Applications`, and start from there.
+
+Until then, the clearest way to try DevFlow is to run it from source using the repo.
 
 Full walkthrough: [doc/getting-started-users.md](doc/getting-started-users.md)
 
