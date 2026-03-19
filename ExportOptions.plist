@@ -13,9 +13,9 @@
 -->
 <plist version="1.0">
 <dict>
-    <!-- "none" = export without any code signing -->
+    <!-- "debugging" = export without App Store / notarization signing (Xcode 16+) -->
     <key>method</key>
-    <string>none</string>
+    <string>debugging</string>
 
     <!-- Strip Swift standard libraries that are already in macOS -->
     <key>stripSwiftSymbols</key>
