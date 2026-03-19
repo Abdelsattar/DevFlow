@@ -18,7 +18,7 @@ jobs:
     steps:
       # ── 1. Checkout ────────────────────────────────────────────────────────
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v4.2.2
 
       # ── 2. Select Xcode version ────────────────────────────────────────────
       - name: Select Xcode 15

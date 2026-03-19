@@ -239,3 +239,211 @@ struct JiraModelTests {
         #expect(date2 != nil)
     }
 }
+
+@Suite("JIRA Ticket Fetch Tests")
+struct JiraTicketFetchTests {
+
+    @Test("Current sprint fetch resolves active sprint IDs per project")
+    @MainActor
+    func fetchCurrentSprintTicketsUsesProjectSprintIDs() async throws {
+        await MockURLProtocol.storage.reset()
+
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.protocolClasses = [MockURLProtocol.self]
+        let session = URLSession(configuration: configuration)
+
+        let appState = AppState()
+        appState.jiraBaseURL = "https://example.atlassian.net"
+
+        let service = JiraService(
+            appState: appState,
+            session: session,
+            authorizationProvider: { "Basic test-token" }
+        )
+
+        await MockURLProtocol.storage.setHandler { request in
+            let path = request.url?.path ?? ""
+
+            switch path {
+            case "/rest/agile/1.0/board":
+                let body = """
+                {
+                    "isLast": true,
+                    "values": [
+                        { "id": 84, "name": "iOS Scrum", "type": "scrum" }
+                    ]
+                }
+                """
+                return try Self.makeResponse(for: request, statusCode: 200, body: body)
+            case "/rest/agile/1.0/board/84/sprint":
+                let body = """
+                {
+                    "isLast": true,
+                    "values": [
+                        { "id": 17, "name": "Sprint 17" },
+                        { "id": 23, "name": "Sprint 23" }
+                    ]
+                }
+                """
+                return try Self.makeResponse(for: request, statusCode: 200, body: body)
+            case "/rest/api/3/search/jql":
+                let body = """
+                {
+                    "isLast": true,
+                    "issues": [
+                        {
+                            "id": "10001",
+                            "key": "IOS-123",
+                            "fields": {
+                                "summary": "Scoped sprint ticket",
+                                "description": null,
+                                "status": {
+                                    "id": "3",
+                                    "name": "In Progress"
+                                },
+                                "priority": null,
+                                "assignee": null,
+                                "components": [],
+                                "comment": null,
+                                "issuetype": {
+                                    "id": "10001",
+                                    "name": "Story"
+                                }
+                            }
+                        }
+                    ]
+                }
+                """
+                return try Self.makeResponse(for: request, statusCode: 200, body: body)
+            default:
+                throw URLError(.unsupportedURL)
+            }
+        }
+
+        let tickets = try await service.fetchTickets(project: "IOS", scope: .currentSprint, assigneeFilter: .all)
+        #expect(tickets.map(\.key) == ["IOS-123"])
+
+        let requests = await MockURLProtocol.storage.allRequests()
+        let searchRequest = try #require(requests.first(where: { $0.url?.path == "/rest/api/3/search/jql" }))
+        let payloadData = try #require(Self.requestBodyData(from: searchRequest))
+        let payload = try #require(
+            JSONSerialization.jsonObject(with: payloadData) as? [String: Any]
+        )
+        let jql = try #require(payload["jql"] as? String)
+
+        #expect(jql.contains("project = IOS"))
+        #expect(jql.contains("sprint in (17, 23)"))
+        #expect(!jql.contains("openSprints()"))
+
+        await MockURLProtocol.storage.reset()
+    }
+
+    private static func makeResponse(
+        for request: URLRequest,
+        statusCode: Int,
+        body: String
+    ) throws -> (HTTPURLResponse, Data) {
+        guard let url = request.url else {
+            throw URLError(.badURL)
+        }
+
+        guard let response = HTTPURLResponse(
+            url: url,
+            statusCode: statusCode,
+            httpVersion: nil,
+            headerFields: ["Content-Type": "application/json"]
+        ) else {
+            throw URLError(.badServerResponse)
+        }
+
+        return (response, Data(body.utf8))
+    }
+
+    private static func requestBodyData(from request: URLRequest) -> Data? {
+        if let body = request.httpBody {
+            return body
+        }
+
+        guard let stream = request.httpBodyStream else {
+            return nil
+        }
+
+        stream.open()
+        defer { stream.close() }
+
+        var body = Data()
+        let bufferSize = 1024
+        let buffer = UnsafeMutablePointer<UInt8>.allocate(capacity: bufferSize)
+        defer { buffer.deallocate() }
+
+        while stream.hasBytesAvailable {
+            let bytesRead = stream.read(buffer, maxLength: bufferSize)
+            guard bytesRead >= 0 else {
+                return nil
+            }
+
+            if bytesRead == 0 {
+                break
+            }
+
+            body.append(buffer, count: bytesRead)
+        }
+
+        return body.isEmpty ? nil : body
+    }
+}
+
+private actor MockURLProtocolStorage {
+    private var handler: (@Sendable (URLRequest) throws -> (HTTPURLResponse, Data))?
+    private var requests: [URLRequest] = []
+
+    func setHandler(
+        _ handler: @escaping @Sendable (URLRequest) throws -> (HTTPURLResponse, Data)
+    ) {
+        self.handler = handler
+    }
+
+    func reset() {
+        handler = nil
+        requests = []
+    }
+
+    func allRequests() -> [URLRequest] {
+        requests
+    }
+
+    func response(for request: URLRequest) throws -> (HTTPURLResponse, Data) {
+        requests.append(request)
+        guard let handler else {
+            throw URLError(.badServerResponse)
+        }
+        return try handler(request)
+    }
+}
+
+private final class MockURLProtocol: URLProtocol, @unchecked Sendable {
+    static let storage = MockURLProtocolStorage()
+
+    override class func canInit(with request: URLRequest) -> Bool {
+        true
+    }
+
+    override class func canonicalRequest(for request: URLRequest) -> URLRequest {
+        request
+    }
+
+    override func startLoading() {
+        Task {
+            do {
+                let (response, data) = try await Self.storage.response(for: request)
+                client?.urlProtocol(self, didReceive: response, cacheStoragePolicy: .notAllowed)
+                client?.urlProtocol(self, didLoad: data)
+                client?.urlProtocolDidFinishLoading(self)
+            } catch {
+                client?.urlProtocol(self, didFailWithError: error)
+            }
+        }
+    }
+
+    override func stopLoading() {}
+}

@@ -37,10 +37,29 @@ final class JiraService {
     private let appState: AppState
     private let session: URLSession
     private let decoder: JSONDecoder
+    private let authorizationProvider: (@Sendable () async throws -> String)?
 
-    init(appState: AppState) {
+    private struct AgilePage<Value: Decodable & Sendable>: Decodable, Sendable {
+        let values: [Value]
+        let isLast: Bool?
+    }
+
+    private struct AgileBoard: Decodable, Sendable {
+        let id: Int
+    }
+
+    private struct AgileSprint: Decodable, Sendable {
+        let id: Int
+    }
+
+    init(
+        appState: AppState,
+        session: URLSession = .shared,
+        authorizationProvider: (@Sendable () async throws -> String)? = nil
+    ) {
         self.appState = appState
-        self.session = URLSession.shared
+        self.session = session
+        self.authorizationProvider = authorizationProvider
 
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
@@ -50,6 +69,10 @@ final class JiraService {
     // MARK: - Auth Header
 
     private func authHeader() async throws -> String {
+        if let authorizationProvider {
+            return try await authorizationProvider()
+        }
+
         switch appState.jiraAuthMethod {
         case .oauth:
             // Use OAuth 2.0 Bearer token (auto-refreshes if expired)
@@ -183,10 +206,22 @@ final class JiraService {
         scope: TicketScope = .currentSprint,
         assigneeFilter: AssigneeFilter = .all
     ) async throws -> [JiraTicket] {
+        let scopeClause: String?
+        switch scope {
+        case .currentSprint:
+            let activeSprintIDs = try await fetchActiveSprintIDs(project: project)
+            guard let currentSprintClause = Self.makeCurrentSprintClause(sprintIDs: activeSprintIDs) else {
+                return []
+            }
+            scopeClause = currentSprintClause
+        case .allTickets, .backlog:
+            scopeClause = scope.jqlClause
+        }
+
         let jql = Self.makeTicketJQL(
             project: project,
-            scope: scope,
-            assigneeFilter: assigneeFilter
+            assigneeFilter: assigneeFilter,
+            scopeClause: scopeClause
         )
 
         let pageSize = 100
@@ -247,10 +282,104 @@ final class JiraService {
         return allTickets
     }
 
+    private func fetchActiveSprintIDs(project: String) async throws -> [Int] {
+        let encodedProject = project.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? project
+        let pageSize = 50
+        var startAt = 0
+        var boardIDs: Set<Int> = []
+        let urlSession = session
+        let jsonDecoder = decoder
+
+        repeat {
+            let request = try await buildRequest(
+                path: "/rest/agile/1.0/board?projectKeyOrId=\(encodedProject)&type=scrum&startAt=\(startAt)&maxResults=\(pageSize)"
+            )
+
+            let boardPage: AgilePage<AgileBoard> = try await RetryHelper.withRetry {
+                let (data, response) = try await urlSession.data(for: request)
+
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    throw JiraServiceError.httpError(statusCode: 0, message: "No HTTP response")
+                }
+
+                switch httpResponse.statusCode {
+                case 200:
+                    do {
+                        return try jsonDecoder.decode(AgilePage<AgileBoard>.self, from: data)
+                    } catch {
+                        throw JiraServiceError.decodingError(error.localizedDescription)
+                    }
+                case 401, 403:
+                    throw JiraServiceError.authenticationFailed
+                default:
+                    let message = String(data: data, encoding: .utf8) ?? "Unknown error"
+                    throw JiraServiceError.httpError(statusCode: httpResponse.statusCode, message: message)
+                }
+            }
+
+            boardPage.values.forEach { boardIDs.insert($0.id) }
+
+            if boardPage.isLast == true || boardPage.values.count < pageSize {
+                break
+            }
+
+            startAt += boardPage.values.count
+        } while true
+
+        guard !boardIDs.isEmpty else {
+            return []
+        }
+
+        var sprintIDs: Set<Int> = []
+        for boardID in boardIDs.sorted() {
+            let request = try await buildRequest(
+                path: "/rest/agile/1.0/board/\(boardID)/sprint?state=active&startAt=0&maxResults=\(pageSize)"
+            )
+
+            let sprintPage: AgilePage<AgileSprint> = try await RetryHelper.withRetry {
+                let (data, response) = try await urlSession.data(for: request)
+
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    throw JiraServiceError.httpError(statusCode: 0, message: "No HTTP response")
+                }
+
+                switch httpResponse.statusCode {
+                case 200:
+                    do {
+                        return try jsonDecoder.decode(AgilePage<AgileSprint>.self, from: data)
+                    } catch {
+                        throw JiraServiceError.decodingError(error.localizedDescription)
+                    }
+                case 401, 403:
+                    throw JiraServiceError.authenticationFailed
+                default:
+                    let message = String(data: data, encoding: .utf8) ?? "Unknown error"
+                    throw JiraServiceError.httpError(statusCode: httpResponse.statusCode, message: message)
+                }
+            }
+
+            sprintPage.values.forEach { sprintIDs.insert($0.id) }
+        }
+
+        return sprintIDs.sorted()
+    }
+
     nonisolated static func makeTicketJQL(
         project: String,
         scope: TicketScope,
         assigneeFilter: AssigneeFilter = .all
+    ) -> String {
+        makeTicketJQL(
+            project: project,
+            assigneeFilter: assigneeFilter,
+            scopeClause: scope.jqlClause
+        )
+    }
+
+    nonisolated static func makeTicketJQL(
+        project: String,
+        assigneeFilter: AssigneeFilter = .all,
+        scopeClause: String?
     ) -> String {
         var jqlParts = [
             "project = \(project)",
@@ -264,11 +393,21 @@ final class JiraService {
             break
         }
 
-        if let scopeClause = scope.jqlClause {
+        if let scopeClause {
             jqlParts.append(scopeClause)
         }
 
         return jqlParts.joined(separator: " AND ") + " ORDER BY updated DESC"
+    }
+
+    nonisolated static func makeCurrentSprintClause(sprintIDs: [Int]) -> String? {
+        let normalizedIDs = Array(Set(sprintIDs)).sorted()
+        guard !normalizedIDs.isEmpty else {
+            return nil
+        }
+
+        let sprintList = normalizedIDs.map(String.init).joined(separator: ", ")
+        return "sprint in (\(sprintList))"
     }
 
     // MARK: - Fetch Components

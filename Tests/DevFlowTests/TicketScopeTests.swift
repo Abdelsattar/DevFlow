@@ -49,4 +49,18 @@ struct TicketScopeTests {
         #expect(jql.contains("sprint is EMPTY"))
         #expect(!jql.contains("openSprints()"))
     }
+
+    @Test("Current sprint clause uses explicit sprint IDs when available")
+    func currentSprintClauseWithSprintIDs() {
+        let clause = JiraService.makeCurrentSprintClause(sprintIDs: [42, 7, 42, 9])
+
+        #expect(clause == "sprint in (7, 9, 42)")
+    }
+
+    @Test("Current sprint clause is omitted when no active sprint IDs exist")
+    func currentSprintClauseWithoutSprintIDs() {
+        let clause = JiraService.makeCurrentSprintClause(sprintIDs: [])
+
+        #expect(clause == nil)
+    }
 }

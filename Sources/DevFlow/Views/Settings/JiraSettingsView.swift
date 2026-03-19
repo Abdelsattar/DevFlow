@@ -135,7 +135,7 @@ struct JiraSettingsView: View {
                     Text("3. Set callback URL to: devflow://oauth/callback/jira")
                         .font(.caption)
                         .foregroundStyle(.secondary)
-                    Text("4. Add scopes: read:jira-work, write:jira-work, read:jira-user")
+                    Text("4. Add scopes: read:jira-work, write:jira-work, read:jira-user, read:board-scope:jira-software, read:project:jira")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                     Text("5. Copy the Client ID above")

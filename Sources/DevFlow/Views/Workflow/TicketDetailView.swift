@@ -1,5 +1,6 @@
 import SwiftUI
 
+@MainActor
 struct TicketDetailView: View {
     let ticket: JiraTicket
     @Environment(AppState.self) private var appState

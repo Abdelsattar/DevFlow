@@ -108,6 +108,8 @@ final class JiraOAuthService: NSObject {
         "read:jira-work",
         "write:jira-work",
         "read:jira-user",
+        "read:board-scope:jira-software",
+        "read:project:jira",
         "offline_access"
     ]
 

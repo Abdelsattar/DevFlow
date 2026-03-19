@@ -2,6 +2,7 @@ import SwiftUI
 
 /// Displays the progress of an autonomous flow run with stage dots,
 /// current status, scrollable log, linked sessions, and control buttons.
+@MainActor
 struct AutonomousFlowProgressView: View {
     @Environment(AppState.self) private var appState
     let run: AutonomousFlowRun
