@@ -3,7 +3,7 @@ import SwiftUI
 @MainActor
 struct TicketListView: View {
     @Environment(AppState.self) private var appState
-    @Environment(\.openSettings) private var openSettings
+    @Environment(\.openSettings) private var openSettings: OpenSettingsAction
 
     var body: some View {
         @Bindable var state = appState
