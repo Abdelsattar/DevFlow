@@ -1,5 +1,6 @@
 import SwiftUI
 
+@MainActor
 struct TicketRowView: View {
     let ticket: JiraTicket
 

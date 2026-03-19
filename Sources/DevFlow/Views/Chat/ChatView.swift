@@ -2,6 +2,7 @@ import SwiftUI
 
 /// Displays a single chat conversation with message bubbles, an input field,
 /// and change extraction/preview functionality for implement sessions.
+@MainActor
 struct ChatView: View {
     @Environment(AppState.self) private var appState
     let session: ChatSession
@@ -430,6 +431,7 @@ struct ChatView: View {
 
 // MARK: - Message Bubble
 
+@MainActor
 struct MessageBubble: View {
     let message: ChatMessage
 

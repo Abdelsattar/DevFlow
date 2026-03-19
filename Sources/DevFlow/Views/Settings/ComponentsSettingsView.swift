@@ -1,5 +1,6 @@
 import SwiftUI
 
+@MainActor
 struct ComponentsSettingsView: View {
     @Environment(AppState.self) private var appState
 

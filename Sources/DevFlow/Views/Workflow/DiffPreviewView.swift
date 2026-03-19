@@ -3,6 +3,7 @@ import SwiftUI
 /// Displays a ChangeSet for review — shows each file change with its path,
 /// change type, syntax-highlighted content, and apply/reject controls.
 /// Also provides commit controls once all changes have been reviewed.
+@MainActor
 struct DiffPreviewView: View {
     @Environment(AppState.self) private var appState
     let changeSet: ChangeSet
@@ -268,6 +269,7 @@ struct DiffPreviewView: View {
 
 /// A card displaying a single file change with expand/collapse, content preview,
 /// and apply/reject buttons.
+@MainActor
 struct FileChangeCard: View {
     let change: FileChange
     let isExpanded: Bool

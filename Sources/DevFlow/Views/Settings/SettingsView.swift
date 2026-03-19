@@ -1,6 +1,7 @@
 import SwiftUI
 import ServiceManagement
 
+@MainActor
 struct SettingsView: View {
     @Environment(AppState.self) private var appState
 
@@ -38,6 +39,7 @@ struct SettingsView: View {
 
 // MARK: - General Settings
 
+@MainActor
 struct GeneralSettingsView: View {
     @Environment(AppState.self) private var appState
     @State private var workspacePath: String = ""

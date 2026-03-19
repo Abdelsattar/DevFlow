@@ -1,6 +1,7 @@
 import SwiftUI
 import AppKit
 
+@MainActor
 struct SetupWizardView: View {
     @Environment(AppState.self) private var appState
 

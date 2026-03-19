@@ -2,6 +2,7 @@ import SwiftUI
 
 /// Horizontal tab bar showing all active chat sessions.
 /// The user can switch between chats or close them.
+@MainActor
 struct ChatTabBar: View {
     @Environment(AppState.self) private var appState
     @State private var sessionToClose: ChatSession?

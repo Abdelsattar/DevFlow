@@ -1,5 +1,6 @@
 import SwiftUI
 
+@MainActor
 struct GitHubSettingsView: View {
     @Environment(AppState.self) private var appState
 

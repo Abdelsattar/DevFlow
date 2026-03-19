@@ -15,6 +15,7 @@ enum PRCreationStep: Equatable {
 ///   2. Push branch to remote
 ///   3. Create PR on GitHub
 ///   4. Transition JIRA ticket + add PR link as comment
+@MainActor
 struct PRCreationView: View {
     @Environment(AppState.self) private var appState
     let ticket: JiraTicket

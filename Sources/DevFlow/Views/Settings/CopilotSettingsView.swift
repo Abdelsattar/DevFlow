@@ -1,6 +1,7 @@
 import SwiftUI
 import AppKit
 
+@MainActor
 struct CopilotSettingsView: View {
     @Environment(AppState.self) private var appState
 

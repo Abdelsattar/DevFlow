@@ -1,5 +1,6 @@
 import SwiftUI
 
+@MainActor
 struct TicketListView: View {
     @Environment(AppState.self) private var appState
     @Environment(\.openSettings) private var openSettings
